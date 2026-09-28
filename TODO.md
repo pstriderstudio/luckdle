@@ -108,7 +108,7 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, and Gem Breaker. The remaining candidates are undesigned ideas.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, Gem Breaker, and Cosmic Alignment (may be cut later). The remaining candidates are undesigned ideas.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -121,7 +121,7 @@ Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing
 | Lucky Fishing | Make one cast and reveal a catch with a species, size, and unusual trait. | Agreed; see the Lucky Fishing section. Species writing and art remain. |
 | The Wishing Well | Make a wish, toss a coin, and receive a whimsical object themed to your wish. | Agreed; see the Wishing Well section. Object writing remains. |
 | Gem Breaker | Strike a geode three times to reveal a mineral with size and purity. | Agreed; see the Gem Breaker section. Mineral writing remains. |
-| Cosmic Alignment | Reveal the alignment of three spinning celestial rings. | Random-stop interaction, alignment measurement, outcome tiers, and animation. |
+| Cosmic Alignment | Three rings settle on their own; luck is how tightly their Sun, Moon, and Star markers align. | Agreed; see the Cosmic Alignment section. May be cut from the game list later. |
 | Lucky Number | Generate a number and discover rare patterns such as repeated digits or palindromes. | Number range, pattern definitions, overlapping patterns, and rarity calculation. |
 | Garden of Chance | Plant a mystery seed and reveal a bloom with possible mutations. | Plant pool, mutation odds, reveal timing, garden persistence, and garden capacity. |
 
@@ -409,6 +409,14 @@ Structured like Lucky Fishing (rarest exact find ranks highest) with a different
 - [x] Collection: a **Gems** tab of 30 minerals (owned or not, silhouettes for missing), plus personal bests per mineral: largest size and purest grade found. Derived from saved finds. No streak reward. Pace at one geode per day: full tab ~283 days typical, ~597 for the unluckiest 10%.
 - [ ] Write the 30 minerals (names, carat ranges, short descriptions).
 
+### Cosmic Alignment — agreed design (may be cut from the game list later)
+
+- [x] Format: one alignment per day when this game is one of the user's five daily selections. Three concentric rings spin, each carrying one marker (Sun, Moon, Star). The player taps **Begin**; the rings slow and settle on their own, outer → middle → inner. No tap-to-stop, so there is no implied timing skill. Final angles are generated and saved first; reduced-motion path uses fades.
+- [x] Luck = **spread**: the narrowest arc containing all three markers (0°–240°); smaller is luckier. Marker angles are independent and uniform.
+- [x] Distribution: with x = spread / 360°, P(spread ≤ x) = 3x² for x ≤ ½, and 3x² − 3(2x − 1)² for ½ < x ≤ ⅔. Shared 0–100 luck score = 100 × (1 − P(spread ≤ yours)); being continuous, ties are negligible. “About 1 in N” = 1 / P(spread ≤ yours): within 60° ≈ 1 in 12; 10° ≈ 1 in 432; 5° ≈ 1 in 1,728; 1° ≈ 1 in 43,200.
+- [x] Labels (exactly 20% each): Charmed ≤ 92.95°; Lucky 92.95°–131.45°; Fair Luck 131.45°–161.00°; Unlucky 161.00°–186.33°; Jinxed > 186.33°.
+- [x] Result: spread in degrees, a flavour name (Grand Alignment ≤ 5°, Aligned ≤ 30°, Converging ≤ 93°, Drifting ≤ 161°, Scattered above), “about 1 in N”, label, and score. No collectibles.
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
@@ -537,6 +545,7 @@ Structured like Lucky Fishing (rarest exact find ranks highest) with a different
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | No separate launch set; games are designed one at a time | Agreed |
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
+| Cosmic Alignment: rings settle on their own; luck = tightness of Sun/Moon/Star alignment; continuous score, labels 20% each | Agreed; may be cut later |
 | Gem Breaker: three strikes to crack a geode; mineral × size × purity, rarest find ranks highest; Gems tab with personal bests | Agreed |
 | The Wishing Well: choose a wish theme, toss a coin, six object tiers, 60 collectible Curios | Agreed |
 | Three Chests: fair pick of three independently filled chests; luck = your treasure, then chests beaten | Agreed |
