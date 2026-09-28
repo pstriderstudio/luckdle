@@ -94,14 +94,19 @@ export function toView(game: GameId, o: Outcome): GameView {
       return { game, find: o };
     case 'lucky-number': {
       const state = o as luckyNumber.LuckyNumberState;
+      const digits = luckyNumber.digitCount(state.secret);
+      const guesses = state.guesses.map((g) => ({
+        guess: g,
+        feedback: (g === state.secret ? 'correct' : state.secret > g ? 'higher' : 'lower') as luckyNumber.GuessFeedback,
+      }));
+      const revealed = luckyNumber.revealedDigits(state.secret, state.guesses);
       return {
         game,
-        digits: luckyNumber.digitCount(state.secret),
-        guesses: state.guesses.map((g) => ({
-          guess: g,
-          feedback: g === state.secret ? 'correct' : state.secret > g ? 'higher' : 'lower',
-        })),
-        revealed: luckyNumber.revealedDigits(state.secret, state.guesses),
+        digits,
+        guesses,
+        revealed,
+        // Worked out only from what the player has already been shown.
+        range: luckyNumber.possibleRange(digits, guesses, revealed),
         solved: state.guesses.includes(state.secret),
       };
     }

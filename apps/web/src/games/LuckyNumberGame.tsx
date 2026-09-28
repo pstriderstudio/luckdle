@@ -47,6 +47,19 @@ export function LuckyNumberGame({ session, start, act, finish }: GameProps<'luck
           </span>
         ))}
       </div>
+      {!view.solved && (
+        <p className="number-range" aria-live="polite">
+          {view.range.min === view.range.max ? (
+            <>
+              It must be <strong>{view.range.min}</strong>
+            </>
+          ) : (
+            <>
+              Somewhere from <strong>{view.range.min}</strong> to <strong>{view.range.max}</strong>
+            </>
+          )}
+        </p>
+      )}
       {last && !view.solved && (
         <p className="reveal-line" aria-live="polite">
           {last.guess}: go {last.feedback === 'higher' ? 'higher ↑' : 'lower ↓'}

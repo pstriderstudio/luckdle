@@ -64,23 +64,61 @@ export function checkGuess(state: LuckyNumberState, guess: number): GuessResult 
   return { feedback, revealed: revealedDigits(state.secret, state.guesses) };
 }
 
+/** The lowest and highest numbers with this many digits (1 digit: 0–9). */
+export function digitRange(digits: number): { min: number; max: number } {
+  return { min: digits === 1 ? 0 : 10 ** (digits - 1), max: 10 ** digits - 1 };
+}
+
+export interface GuessHint {
+  guess: number;
+  feedback: GuessFeedback;
+}
+
+/**
+ * Whether a number is still possible given only what the player has been
+ * shown: the digit count, higher/lower hints, and revealed digits. This is
+ * exactly the information the reference player uses.
+ */
+export function isPossible(n: number, digits: number, hints: readonly GuessHint[], revealed: readonly (string | null)[]): boolean {
+  if (digitCount(n) !== digits) return false;
+  for (const { guess, feedback } of hints) {
+    if (feedback === 'correct' ? n !== guess : feedback === 'higher' ? n <= guess : n >= guess) return false;
+  }
+  const ns = String(n);
+  for (let i = 0; i < revealed.length; i++) if (revealed[i] !== null && ns[i] !== revealed[i]) return false;
+  return true;
+}
+
+/** The smallest and largest numbers still possible (shown to the player while guessing). */
+export function possibleRange(
+  digits: number,
+  hints: readonly GuessHint[],
+  revealed: readonly (string | null)[],
+): { min: number; max: number } {
+  const { min: lo, max: hi } = digitRange(digits);
+  let min = -1;
+  let max = -1;
+  for (let n = lo; n <= hi; n++) {
+    if (!isPossible(n, digits, hints, revealed)) continue;
+    if (min === -1) min = n;
+    max = n;
+  }
+  return { min, max };
+}
+
 /** Guesses the reference player needs for a secret. */
 export function referenceGuesses(secret: number): number {
   const d = digitCount(secret);
-  const s = String(secret);
+  const { min, max } = digitRange(d);
   let candidates: number[] = [];
-  for (let n = 0; n <= MAX_SECRET; n++) if (digitCount(n) === d) candidates.push(n);
+  for (let n = min; n <= max; n++) candidates.push(n);
+  const hints: GuessHint[] = [];
   for (let count = 1; ; count++) {
     const guess = candidates[Math.floor((candidates.length - 1) / 2)];
     if (guess === secret) return count;
-    const g = String(guess);
-    const higher = secret > guess;
-    candidates = candidates.filter((n) => {
-      if (higher ? n <= guess : n >= guess) return false;
-      const ns = String(n);
-      for (let i = 0; i < d; i++) if (g[i] === s[i] && ns[i] !== s[i]) return false;
-      return true;
-    });
+    hints.push({ guess, feedback: secret > guess ? 'higher' : 'lower' });
+    const revealed = revealedDigits(secret, hints.map((h) => h.guess));
+    candidates = candidates.filter((n) => isPossible(n, d, hints, revealed));
   }
 }
 

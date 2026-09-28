@@ -47,6 +47,8 @@ export type GameView =
       digits: number;
       guesses: { guess: number; feedback: luckyNumber.GuessFeedback }[];
       revealed: (string | null)[];
+      /** Smallest and largest numbers still possible from the hints and revealed digits. */
+      range: { min: number; max: number };
       solved: boolean;
     }
   | { game: 'garden-of-chance'; bloom: gardenOfChance.GardenOutcome };

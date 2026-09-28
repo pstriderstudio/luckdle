@@ -5,9 +5,12 @@ import {
   isValidGuess,
   REFERENCE_GUESS_COUNTS,
   REFERENCE_MEAN,
+  possibleRange,
   referenceGuesses,
+  revealedDigits,
   simulateReferenceCounts,
 } from '../src/games/luckyNumber.ts';
+import { seededRng } from '../src/rng.ts';
 
 describe('Lucky Number', () => {
   it('reference counts match a fresh simulation over all 10,000 numbers', () => {
@@ -55,5 +58,35 @@ describe('Lucky Number', () => {
 
   it('the reference player solves one number per digit length in one guess', () => {
     expect([4, 54, 549, 5499].map(referenceGuesses)).toEqual([1, 1, 1, 1]);
+  });
+
+  it('shows the full range for the digit count before any guess', () => {
+    const none = (d: number) => possibleRange(d, [], Array(d).fill(null));
+    expect([1, 2, 3, 4].map(none)).toEqual([
+      { min: 0, max: 9 },
+      { min: 10, max: 99 },
+      { min: 100, max: 999 },
+      { min: 1000, max: 9999 },
+    ]);
+  });
+
+  it('narrows the range with hints and revealed digits, always keeping the secret inside', () => {
+    const hints = (secret: number, guesses: number[]) =>
+      guesses.map((guess) => ({ guess, feedback: secret > guess ? ('higher' as const) : ('lower' as const) }));
+    expect(possibleRange(4, hints(4827, [5000, 4000, 4527]), revealedDigits(4827, [5000, 4000, 4527]))).toEqual({ min: 4627, max: 4927 });
+
+    const rng = seededRng(21);
+    for (let i = 0; i < 300; i++) {
+      const secret = rng.int(10000);
+      const d = String(secret).length;
+      const guesses: number[] = [];
+      for (let k = 0; k < 4; k++) {
+        const g = (d === 1 ? 0 : 10 ** (d - 1)) + rng.int(d === 1 ? 10 : 9 * 10 ** (d - 1));
+        if (g !== secret) guesses.push(g);
+      }
+      const r = possibleRange(d, hints(secret, guesses), revealedDigits(secret, guesses));
+      expect(r.min).toBeLessThanOrEqual(secret);
+      expect(r.max).toBeGreaterThanOrEqual(secret);
+    }
   });
 });
