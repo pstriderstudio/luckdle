@@ -7,7 +7,7 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 - Build a daily website where visitors test their luck through games of chance.
 - After completing or skipping tarot, show a game-selection board. Returning visitors go directly to the game-board experience.
 - Provide several browseable boards grouped by game type. Dice, cards, and chance are example categories; finalize categories after choosing the game list.
-- Free users can choose five games per day to make their own personal board. Per-game attempt limits and board-editing rules are separate decisions that remain open.
+- Free users can choose five games per day to make their own personal board. Each chosen game gets one attempt per day; unplayed picks can be swapped until played; everyone shares one global daily reset (see section 4).
 - Game boards do not display results. Decide how results are presented separately; do not assume score or outcome previews on game panels.
 - Provide a collection section showing the cards and gacha characters the user has pulled.
 - Score every game on one shared 0–100 luck scale: the percentage of that game's possible results ranked below yours, plus half of those that tie with it. Equal results get equal scores; no hidden tie-breakers.
@@ -143,7 +143,7 @@ Five dice, one tap to roll them all, no rerolls, and combination-based luck are 
 - [x] Keep results off the board. Where and how results are shown remains a separate decision.
 - [ ] Decide the result display outside the board. Proposed content: show the dice, name the combination, and show the probability of that exact result category once categories are precisely defined. Presentation remains undecided.
 - [x] Decide interaction: one click/tap rolls all five dice once.
-- [ ] Decide attempts. Proposed: one official roll when this game is one of the user's five daily selections, with the result saved and no reroll.
+- [x] Decide attempts: one official roll per day when this game is one of the user's five daily selections, with the result saved and no reroll.
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
 - [x] Use the shared luck labels with dice cut-offs (if the proposed ranking is approved): No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
@@ -282,7 +282,7 @@ The most common pack (R / C / C, 31.69%) is Jinxed with a score of 15.84. Scores
 - [ ] Build the reveal using placeholder cards; retain an accessible reduced-motion path. Pack contents should be fixed before reveals so animation timing does not change the outcome.
 - [x] Make pulled cards persistent collectibles visible in the site's collection section alongside gacha characters.
 - [ ] Define collection storage, duplicate counts, same-pack duplicate handling, and whether special variants exist. Defer artwork direction until the games are finished.
-- [ ] Define daily attempts and result persistence.
+- [x] Define daily attempts: one pack per day when this game is one of the user's five daily selections. The pack is saved before the reveal (see the opening sequence).
 
 Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/en/products/suda/) as a nine-card booster; Wizards' [Play Booster introduction](https://magic.wizards.com/en/news/making-magic/what-are-play-boosters) describes fourteen-card packs. Real products vary, so use these as structural inspiration rather than assuming one universal pack format.
 
@@ -311,8 +311,8 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 
 - [ ] Finalize board categories and which games belong to each; dice, cards, and chance are examples rather than approved categories.
 - [ ] Decide how users move between category boards and their personal board.
-- [ ] Decide whether players select all five games before starting or build their board as they go.
-- [ ] Decide whether unplayed selections can be swapped, and when a selected game becomes locked for that day.
+- [x] Players build their board as they go; they don't need to pick all five before playing.
+- [x] Unplayed selections can be swapped any time that day. A game locks the moment its result is generated (tapping Roll, tearing open the pack).
 - [ ] Decide whether yesterday's board carries forward or users choose a fresh board each day.
 - [ ] Define what “make their own board” allows beyond choosing games: automatic arrangement, rearrangeable panels, or more customization.
 - [ ] Decide personal-board persistence and account requirements separately from the browser-only tarot introduction.
@@ -329,9 +329,11 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 
 ## 4. Shared daily experience — proposals to revisit
 
-- [ ] Decide per-game attempt limits within the five selected daily games. Proposed: one official attempt per selected game each day; this is not yet approved.
-- [ ] Decide whether players receive independent results with equal odds, shared daily outcomes, or another model.
-- [ ] Decide daily reset rules and communicate the next reset clearly.
+- [x] Decide per-game attempt limits: one official attempt per selected game each day. Games not selected can be browsed on the boards but not played; there are no practice plays, so collections and comparisons only reflect official results.
+- [x] Leaving mid-animation or mid-reveal never grants a redo: returning shows the same saved result.
+- [x] Players receive independent results with equal odds; outcomes are not shared between players.
+- [x] Use one global daily reset at the same moment for everyone, defining a single shared game day for results and comparisons.
+- [ ] Choose the global reset time (e.g. midnight UTC, which is 8pm Eastern during daylight time) and show a clear countdown to the next reset.
 - [ ] Decide whether collections and history require an account or can begin anonymously.
 - [x] Compare users' daily luck with other users after they finish their games for the day. Keep the one-time tarot introduction separate.
 - [ ] Define the daily report and comparison presentation. Proposed: a daily luck score with a percentile among other eligible players, such as “Luckier than 82% of players today”; wording is illustrative, not an actual result.
@@ -340,7 +342,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 - [ ] Design a compact share card for daily game results, excluding the one-time tarot reading.
 - [x] Put every game on the shared 0–100 luck score, so each game's score measures the same thing and no game choice raises expected standing.
 - [ ] Define a daily luck score from the completed game results and how unlike games are compared. A common scale alone does not guarantee comparable daily distributions: account for each selected game's odds, outcome ordering, ties, and differing score distributions before choosing an aggregation method.
-- [ ] Define comparison eligibility, daily cohort/reset boundary, tie handling, and whether standings are live or final. Comparisons must use actual eligible user results, distinct from theoretical outcome rarity; provide a clear state when there are too few results.
+- [ ] Define comparison eligibility, tie handling, and whether standings are live or final. Comparisons must use actual eligible user results, distinct from theoretical outcome rarity; provide a clear state when there are too few results. The cohort is everyone playing the same global game day.
 - [x] Show both a personal percentile and a leaderboard after the user completes their games for the day. Exact layout, leaderboard identity/display names, and ranking rules remain to be defined.
 - [ ] Once game rules are final, verify that choice of games does not systematically inflate daily standing; assess calibration across different five-game boards and any later paid-user game counts.
 
@@ -349,7 +351,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 - [ ] Choose the application stack and hosting once the initial scope is clear.
 - [ ] Decide where random outcomes are generated and how official daily results are stored.
 - [ ] Define shared result storage and player/day identity for cross-user daily comparisons, including one official result per allowed play and protection against duplicate submissions. Browser-only tarot tracking does not by itself supply cross-user game standings.
-- [ ] Define the day identifier for daily games and persistence for both daily results and the one-time tarot introduction.
+- [ ] Define the day identifier for daily games (one global game day, from the agreed reset) and persistence for both daily results and the one-time tarot introduction.
 - [ ] Define loading, error, and recovery behavior for the approved features.
 - [ ] Verify mobile layout, accessibility, daily limits, persistence, and outcome calculations for the initial release.
 
@@ -364,7 +366,9 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Daily luck website with multiple chance-based activities | Agreed |
 | Game-selection boards after tarot completion or skipping | Agreed |
 | Multiple boards grouped by game type | Agreed; categories deferred until the game list is chosen |
-| Free users choose five games per day for their own board | Agreed; attempt limits and board-editing rules remain open |
+| Free users choose five games per day for their own board | Agreed |
+| One official attempt per chosen game per day; no practice plays; unplayed picks swappable until played; no redo after leaving | Agreed |
+| Independent results with equal odds; one global daily reset for everyone | Agreed; reset time still to choose |
 | Game boards do not display results | Agreed; result presentation deferred |
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
 | Dice luck is based on combinations: rarer combinations are luckier, no/minimal combinations are low luck | Agreed; exact categories/ranking remain proposed |
