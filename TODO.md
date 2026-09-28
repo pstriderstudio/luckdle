@@ -519,12 +519,15 @@ Replaces the earlier random-number-pattern idea.
 - [ ] Verify calibration by simulation: every game's expected score is 50, but games differ in spread (lumpy games like dice vary more), so check how often different boards reach the top of the leaderboard, and account for Lucky Number's skill element. Revisit for any later paid-user game counts.
 - [ ] Build the simulated field used when fewer than 20 players have finished.
 
-## 5. Technical foundation — not yet selected
+## 5. Technical foundation
 
-- [ ] Choose the application stack and hosting once the initial scope is clear.
-- [ ] Decide where random outcomes are generated and how official daily results are stored.
-- [ ] Define shared result storage and player/day identity for cross-user daily comparisons, including one official result per allowed play and protection against duplicate submissions. Browser-only tarot tracking does not by itself supply cross-user game standings.
-- [ ] Define the day identifier for daily games (one global game day, from the agreed reset) and persistence for both daily results and the one-time tarot introduction.
+See [ADR 0001](docs/adr/0001-tech-stack.md).
+
+- [x] Stack: TypeScript web app (React + Vite, static SPA/PWA; Canvas/WebGL for rich game scenes), wrapped later with Capacitor for iOS/Android store apps. Backend: Supabase (Postgres, Auth, Edge Functions, scheduled jobs). Static web hosting chosen at deploy time.
+- [x] Outcomes are generated only in Supabase Edge Functions with a cryptographically secure RNG and saved in Postgres before any reveal. Clients request actions and receive only revealed information.
+- [x] Player identity: Supabase anonymous user on first visit, linkable to email/Google/Apple. Results in Postgres with a unique (player, game day, game) constraint for one official result per play; row-level security lets players read only their own revealed data and never write results.
+- [x] Game day identifier: the calendar date whose 3:00 AM America/New_York reset starts it, computed on the server. Tarot stays in browser storage as agreed; daily results live in Postgres.
+- [ ] Scaffold the repository: web app, Supabase project (migrations, Edge Functions), and a shared game-logic package with tests (outcome distributions and score tables from this document as test data).
 - [ ] Define loading, error, and recovery behavior for the approved features.
 - [ ] Verify mobile layout, accessibility, daily limits, persistence, and outcome calculations for the initial release.
 
@@ -544,6 +547,7 @@ Replaces the earlier random-number-pattern idea.
 | Independent results with equal odds; one global daily reset for everyone at 3:00 AM US Eastern (follows daylight saving) | Agreed |
 | Game boards do not display results | Agreed; result presentation deferred |
 | Daily score = average of five game scores; percentile vs finished players (live, final at reset; simulated field under 20 players); daily label by quintile; top-100 leaderboard for signed-in players; Wordle-style share card | Agreed |
+| Stack: TypeScript web app (React + Vite) with Capacitor later; Supabase backend with all outcomes generated server-side (ADR 0001) | Agreed |
 | Personal board is home with category boards as tabs; yesterday's picks carry over; drag-to-rearrange; Picked / Ready / Played states | Agreed |
 | Four boards of three: Arena (Lucky Number, Coin Streak, Dice), Vault (Card Pack, Summon, Chests), Wilds (Fishing, Gems, Garden), Night Sky (Falling Star, Cosmic Alignment, Wishing Well) | Agreed; names are placeholders |
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
