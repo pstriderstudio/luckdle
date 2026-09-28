@@ -114,7 +114,7 @@ Current discussion: work through the games individually. The dice game's core in
 | --- | --- | --- |
 | Dice of Destiny | One tap rolls all five dice once, with no rerolls. | Dice faces, combination rules/rankings, result presentation outside the board, and rewards. |
 | Mystery Card Pack | Open a larger trading-card-style booster with multiple rarities, an opening animation, and a rare card pulled upward and revealed. | Pack size, slot structure, scoring, rarity distribution, guarantees, variants, duplicates, and collection storage. |
-| Daily Summon | Reveal one character from an original fantasy cast. | Character roster, rarity tiers, reveal sequence, duplicates, and collection progression. |
+| Daily Summon | A gacha-style 10-pull of characters from an original fantasy cast. | Agreed; see the Daily Summon section. Character writing and art remain. |
 | Coin Streak | Flip until tails ends the run; measure the number of consecutive heads. | Manual versus automatic flips, outcome probabilities, scoring, and long-streak handling. |
 | Plinko / Falling Star | Watch a dropped ball or star bounce through pegs into a reward slot. | Board layout, drop-point choice, outcome distribution, and physics versus a preselected outcome. |
 | Three Chests | Choose a chest, then reveal its contents and those of the other two. | Reward pool, how contents are assigned, and reveal order. |
@@ -291,6 +291,27 @@ The most common pack (R / C / C, 31.69%) is Jinxed with a score of 15.84. Scores
 
 Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/en/products/suda/) as a nine-card booster; Wizards' [Play Booster introduction](https://magic.wizards.com/en/news/making-magic/what-are-play-boosters) describes fourteen-card packs. Real products vary, so use these as structural inspiration rather than assuming one universal pack format.
 
+### Daily Summon — agreed design
+
+A daily gacha-style 10-pull from an original fantasy cast, separate in feel from the card pack: one dramatic multi-character summon rather than a stack of cards.
+
+- [x] Format: one 10-pull per day when this game is one of the user's five daily selections. Pulls 1–9 are regular; pull 10 is guaranteed 4★ or better.
+- [x] Star tiers: 1★ to 5★ (a separate ladder from card rarities).
+- [x] Odds (classic): each regular pull 1★ 50% / 2★ 30% / 3★ 14% / 4★ 5% / 5★ 1%; the guaranteed pull 4★ 90% / 5★ 10%. All pulls are independent. About 17.8% of summons (roughly 1 in 6) contain at least one 5★.
+- [x] No pity system and no streak reward for now; everyone has equal odds.
+- [x] Roster: 60 characters — 20 at 1★, 15 at 2★, 12 at 3★, 8 at 4★, 5 at 5★ — each equally likely within its tier. Each has a name, title, and one-line bio; art deferred (placeholders/silhouettes). Simulated pace at one summon per day: full roster ~55 days typical, ~103 days for the unluckiest 10%. The 150-card set stays the long-term chase.
+- [x] Collection: follows the agreed collection rules (owned or not owned, silhouettes for undiscovered characters, no variants).
+- [x] Ranking and score: compare all ten stars highest first (best, then second-best, and so on); summons tie only when all ten tiers match. Uses the shared 0–100 luck score.
+- [x] Labels: per-game cut-offs over the 935 possible outcomes, as close to 20% each as possible. Preliminary cut-offs (search on a 0.5% grid; implementation should confirm by exact search): Jinxed 19.1% (from 4★ + nine 1★ up to 4★ 3★ 2★ 2★ 1★…), Unlucky 18.3% (up to 4★ 3★ 3★ 2★ 2★ 1★…), Fair Luck 20.9% (up to 4★ 4★ 2★ 2★…), Lucky 20.8% (up to 4★ 4★ 4★ 3★ 2★ 2★ 1★…), Charmed 20.8% (from 4★ 4★ 4★ 3★ 2★ 2★ 2★ 1★ 1★ 1★ upward). Every summon containing a 5★ is Charmed. Most common single outcome: 4★ 3★ 2★ 2★ 2★ 1★ 1★ 1★ 1★ 1★ (5.4%).
+- [x] Reveal, self-paced with click/tap/keyboard equivalents and a reduced-motion path of fades:
+  1. **Before any animation:** generate and save all ten pulls, snapshot ownership, and add characters to the collection once. Resuming returns to the same point.
+  2. **Portal:** trace a circle to charge the summoning portal (click, tap, or Enter also works). Its glow reflects the best tier in the batch.
+  3. **Pulls in order:** reveal pulls 1–10 in pull order, so a high tier can surprise mid-batch; the guaranteed pull is last. Stars pop in one at a time. First-time characters get a **New** badge.
+  4. **Duplicates:** already-owned 1★–3★ characters are skipped and tallied; every 4★ and 5★ gets its own spotlight. Within one summon, the first copy of a 1★–3★ character is revealed and later copies are skipped.
+  5. **Finish:** a grid of all ten, with already-owned characters marked **Owned** (unlike packs, the grid shows skipped characters again, following gacha convention), then the luck label and score.
+- [ ] Write the 60-character cast (names, titles, bios) and assign tiers.
+- [ ] Confirm the label cut-offs by exact search and build the full outcome/score table in code rather than in this document.
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
@@ -392,6 +413,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Server-side storage under an anonymous player; optional sign-in for cross-device sync and leaderboard name | Agreed |
 | Collection tracks ownership only (no copy counts), shows undiscovered silhouettes and progress, no card variants at launch | Agreed |
 | Card list: 150 cards (60 C / 40 U / 25 R / 15 SR / 7 UR / 3 ScR), equal chance within a rarity | Agreed |
+| Daily Summon: 10-pull (9 regular + 1 guaranteed 4★+), 1★–5★ with classic odds, 60-character roster, no pity, reveal in pull order ending in a 10-character grid | Agreed |
 | 7-day play streak grants new-card priority (unowned cards first within the rolled rarity); rarity odds and scores unchanged | Agreed; card packs only — Daily Summon has no streak reward for now |
 | Already-owned cards below Rare count among the 12 but skip their individual reveal, with no replacement | Agreed; pack odds remain unchanged |
 | Top-three rarest cards from the current pack form a podium and determine pack luck | Agreed |
