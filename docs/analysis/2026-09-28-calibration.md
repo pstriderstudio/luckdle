@@ -15,15 +15,17 @@
 
    Most real players will probably play below the careful reference, so for them picking Lucky Number *lowers* expected standing — which conflicts with the agreed rule that no game choice should raise (or lower) expected standing.
 
-## Decision needed: Lucky Number scoring
+## Decision: Lucky Number scoring — B (implemented)
 
-Options (not implemented):
+Decided 2026-09-28: **B**. Lucky Number is now scored against completed plays from the previous 30 game days (today excluded), once there are at least 200 of them; until then it falls back to the simulated careful player. The score and the reference used are saved with the game, so they never change afterwards. The skill analysis above still describes the fallback.
+
+Options considered:
 
 - **A. Keep scoring against the simulated careful player** (current design). Skill is rewarded; typical players score below 50 and are nudged away from choosing it.
 - **B. Score against real players' recent results** (e.g. guess counts from the last 30 game days), falling back to the simulation until there are enough plays. The average player then expects 50 again, while better-than-average play is still rewarded. Scores stay fixed at play time because the reference window is in the past.
 - **C. Show Lucky Number's result but leave it out of the daily score** and leaderboard (or count it separately as a skill game).
 
-Recommendation: **B**, because it restores the “no game choice changes expected standing” rule without removing the skill that makes Lucky Number different.
+Chosen: **B**, because it restores the “no game choice changes expected standing” rule without removing the skill that makes Lucky Number different.
 
 ## Full results
 

@@ -83,6 +83,17 @@ export class MemoryStore implements EngineStore {
           .filter(([player]) => player !== playerId)
           .map(([, d]) => d.score);
       },
+      async luckyNumberCounts(fromDay, toDay) {
+        const counts: Record<number, number> = {};
+        for (const list of Object.values(s.results)) {
+          for (const r of list) {
+            if (r.gameId !== 'lucky-number' || !r.completed || r.gameDay < fromDay || r.gameDay >= toDay) continue;
+            const g = (r.outcome as { guesses: number[] }).guesses.length;
+            counts[g] = (counts[g] ?? 0) + 1;
+          }
+        }
+        return counts;
+      },
       async saveDailyScore(score, percentile) {
         (s.daily[gameDay] ??= {})[playerId] = { score, percentile };
         changed();

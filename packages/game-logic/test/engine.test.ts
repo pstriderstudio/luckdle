@@ -21,7 +21,12 @@ interface Harness {
   store: EngineStore;
   dailyScore(playerId: string, gameDay: string): Promise<number | undefined>;
   seedCohort(gameDay: string, scores: number[]): Promise<void>;
+  /** Adds completed Lucky Number plays by other players, each needing `guesses` guesses. */
+  seedLuckyNumberPlays(gameDay: string, plays: number, guesses: number): Promise<void>;
 }
+
+let nextSeedPlayer = 1000;
+const luckyOutcome = (guesses: number) => ({ secret: 5000, guesses: [...Array.from({ length: guesses - 1 }, () => 4000), 5000] });
 
 const HARNESSES: [string, () => Promise<Harness>][] = [
   [
@@ -33,6 +38,22 @@ const HARNESSES: [string, () => Promise<Harness>][] = [
         dailyScore: async (p, d) => store.state.daily[d]?.[p]?.score,
         seedCohort: async (d, scores) => {
           store.state.daily[d] = Object.fromEntries(scores.map((score, i) => [uuid(100 + i), { score, percentile: 0 }]));
+        },
+        seedLuckyNumberPlays: async (d, plays, guesses) => {
+          for (let i = 0; i < plays; i++) {
+            store.state.results[uuid(nextSeedPlayer++)] = [
+              {
+                gameDay: d,
+                gameId: 'lucky-number',
+                outcome: luckyOutcome(guesses) as never,
+                progress: {},
+                completed: true,
+                score: 50,
+                label: 'Fair Luck',
+                createdAt: NOW.toISOString(),
+              },
+            ];
+          }
         },
       };
     },
@@ -59,6 +80,18 @@ const HARNESSES: [string, () => Promise<Harness>][] = [
             await pg.client.query(
               'insert into public.daily_scores (player_id, game_day, daily_score, percentile) values ($1, $2::date, $3, 0)',
               [id, d, score],
+            );
+          }
+        },
+        seedLuckyNumberPlays: async (d, plays, guesses) => {
+          for (let i = 0; i < plays; i++) {
+            const id = uuid(nextSeedPlayer++);
+            await pg.addUsers([id]);
+            await pg.client.query('insert into public.players (id) values ($1)', [id]);
+            await pg.client.query(
+              `insert into public.game_results (player_id, game_day, game_id, outcome, completed, score, label)
+               values ($1, $2::date, 'lucky-number', $3::text::jsonb, true, 50, 'Fair Luck')`,
+              [id, d, JSON.stringify(luckyOutcome(guesses))],
             );
           }
         },
@@ -198,6 +231,33 @@ describe.each(HARNESSES)('game engine (%s store)', (_name, makeHarness) => {
     const r = await engine.handle(ctx(), { op: 'snapshot' });
     expect(r.snapshot.board).toHaveLength(5);
     expect(Object.keys(r.snapshot.sessions)).toHaveLength(5);
+  });
+
+  async function playLuckyNumber(engine: GameEngine) {
+    await engine.handle(ctx(), { op: 'start', game: 'lucky-number' });
+    await resolveAll(engine);
+    return (await engine.handle(ctx(), { op: 'finish', game: 'lucky-number' })).session!.result!;
+  }
+
+  it('scores Lucky Number against the last 30 days of real players once there are 200 plays', async () => {
+    const h = await makeHarness();
+    // Everyone else needed 30 guesses, so any sensible play beats them all.
+    await h.seedLuckyNumberPlays('2026-09-27', 150, 30);
+    await h.seedLuckyNumberPlays('2026-08-29', 50, 30); // 30 days back: still in the window
+    const result = await playLuckyNumber(new GameEngine(h.store, seededRng(8)));
+    expect(result.headline).toMatch(/recent players average 30\b/);
+    expect(result.score).toBe(100);
+    expect(result.label).toBe('Charmed');
+  });
+
+  it('falls back to the simulated player, ignoring today and plays older than 30 days', async () => {
+    const h = await makeHarness();
+    await h.seedLuckyNumberPlays('2026-09-27', 150, 30);
+    await h.seedLuckyNumberPlays(DAY, 100, 30); // today: excluded so scores are fixed at play time
+    await h.seedLuckyNumberPlays('2026-08-28', 100, 30); // 31 days back: outside the window
+    const result = await playLuckyNumber(new GameEngine(h.store, seededRng(8)));
+    expect(result.headline).toMatch(/the average is 6\.8/);
+    expect(result.score).toBeLessThan(100);
   });
 
   it('keeps players separate', async () => {

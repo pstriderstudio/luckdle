@@ -9,6 +9,7 @@ import { type GameId, isGameId } from '../catalog.ts';
 import { nextReset, shiftGameDay } from '../gameDay.ts';
 import { type Rng, secureRng, seededRng } from '../rng.ts';
 import { WISHES } from '../games/wishingWell.ts';
+import * as luckyNumber from '../games/luckyNumber.ts';
 import type { ItemType } from '../collections.ts';
 import type {
   CollectionEntry,
@@ -213,11 +214,17 @@ export class GameEngine {
       if (!r) throw new GameError('This game has not been started today');
       if (!isResolved(game, r.outcome)) throw new GameError('This game is not finished yet');
       if (!r.completed) {
+        if (game === 'lucky-number' && !r.outcome.scoring) {
+          // Score against real players' recent results (past days only, so this never changes later).
+          const from = shiftGameDay(ctx.gameDay, -luckyNumber.REFERENCE_WINDOW_DAYS);
+          const counts = await day.luckyNumberCounts(from, ctx.gameDay);
+          r.outcome.scoring = luckyNumber.scoreLuckyNumber(r.outcome.guesses.length, counts);
+        }
         const summary = evaluate(game, r.outcome);
         r.completed = true;
         r.score = summary.score;
         r.label = summary.label;
-        await day.updateResult(game, { completed: true, score: summary.score, label: summary.label });
+        await day.updateResult(game, { outcome: r.outcome, completed: true, score: summary.score, label: summary.label });
         const report = await this.report(ctx, games, results, () => day.cohortScores());
         if (report) await day.saveDailyScore(report.dailyScore, report.percentile);
       }

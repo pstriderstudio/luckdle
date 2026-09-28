@@ -1,7 +1,8 @@
 /**
  * Lucky Number: guess a secret number from 0–9999. Each guess gets higher /
  * lower / correct, and digits in the correct position are revealed. Scored
- * against a simulated careful player, not live players.
+ * against recent real players, or a simulated careful player until there are
+ * enough plays.
  */
 import { type LuckLabel, type LuckResult, rankOutcomes } from '../luck.ts';
 import type { Rng } from '../rng.ts';
@@ -130,9 +131,64 @@ const labelByGuesses = (() => {
 export const REFERENCE_MEAN =
   Object.entries(REFERENCE_GUESS_COUNTS).reduce((s, [g, c]) => s + Number(g) * c, 0) / TOTAL;
 
+/** Scores a guess count against the simulated careful player (the fallback reference). */
 export function evaluateLuckyNumber(guessCount: number): LuckResult {
   if (!Number.isInteger(guessCount) || guessCount < 1) throw new Error('Invalid guess count');
   if (guessCount > MAX_REFERENCE) return { score: 0, label: 'Jinxed', probability: 0 };
   const entry = labelByGuesses.get(guessCount)!;
   return { score: entry.score, label: entry.label, probability: entry.probability };
+}
+
+// ---------------------------------------------------------------------------
+// Scoring against real players (TODO.md: Lucky Number scoring decision, option B)
+
+/** Past game days whose completed plays form the reference (today is excluded, so scores are fixed at play time). */
+export const REFERENCE_WINDOW_DAYS = 30;
+/** Below this many reference plays, the simulated careful player is used instead. */
+export const MIN_PLAYER_REFERENCE = 200;
+
+/** Guess count → number of plays. */
+export type GuessCounts = Readonly<Record<number, number>>;
+
+export interface LuckyNumberScoring extends LuckResult {
+  /** Mean guesses of the reference used. */
+  mean: number;
+  source: 'players' | 'simulation';
+  /** Plays in the reference (10,000 for the simulation: one per secret). */
+  plays: number;
+}
+
+function totalOf(counts: GuessCounts): number {
+  return Object.values(counts).reduce((s, c) => s + c, 0);
+}
+
+/**
+ * Scores a guess count against any reference distribution of guess counts:
+ * 100 × (share needing more guesses + ½ share needing the same), with label
+ * cut-offs chosen over that distribution as for every other game.
+ */
+export function evaluateAgainst(counts: GuessCounts, guessCount: number): LuckResult {
+  if (!Number.isInteger(guessCount) || guessCount < 1) throw new Error('Invalid guess count');
+  const total = totalOf(counts);
+  if (total <= 0) throw new Error('Empty reference');
+  const maxGuesses = Math.max(MAX_REFERENCE, guessCount, ...Object.keys(counts).map(Number));
+  const outcomes = Array.from({ length: maxGuesses }, (_, i) => ({ value: i + 1, probability: (counts[i + 1] ?? 0) / total }));
+  const groups = rankOutcomes(outcomes, (a, b) => b - a); // more guesses = less lucky
+  const group = groups.find((g) => g.outcomes[0] === guessCount)!;
+  return { score: group.score, label: group.label, probability: group.probability };
+}
+
+/**
+ * Scores a solved game against recent real players' guess counts when there
+ * are at least MIN_PLAYER_REFERENCE of them, otherwise against the simulated
+ * careful player. The result is stored with the game, so it never changes.
+ */
+export function scoreLuckyNumber(guessCount: number, playerCounts: GuessCounts = {}): LuckyNumberScoring {
+  const plays = totalOf(playerCounts);
+  const usePlayers = plays >= MIN_PLAYER_REFERENCE;
+  const counts = usePlayers ? playerCounts : REFERENCE_GUESS_COUNTS;
+  const total = totalOf(counts);
+  const mean = Object.entries(counts).reduce((s, [g, c]) => s + Number(g) * c, 0) / total;
+  const result = usePlayers ? evaluateAgainst(counts, guessCount) : evaluateLuckyNumber(guessCount);
+  return { ...result, mean, source: usePlayers ? 'players' : 'simulation', plays: total };
 }

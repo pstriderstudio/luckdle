@@ -130,6 +130,12 @@ function plural(n: number, word: string, many = `${word}s`) {
   return `${n} ${n === 1 ? word : many}`;
 }
 
+const pickLuck = (r: { score: number; label: ResultSummary['label']; probability: number }) => ({
+  score: r.score,
+  label: r.label,
+  probability: r.probability,
+});
+
 export function evaluate(game: GameId, o: Outcome): ResultSummary {
   switch (game) {
     case 'dice-of-destiny': {
@@ -181,8 +187,11 @@ export function evaluate(game: GameId, o: Outcome): ResultSummary {
     case 'lucky-number': {
       const n = o.guesses.length;
       return {
-        ...luckyNumber.evaluateLuckyNumber(n),
-        headline: `Solved in ${plural(n, 'guess', 'guesses')} — the average is ${luckyNumber.REFERENCE_MEAN.toFixed(1)}`,
+        // Scored when the game finished (see GameEngine.finish); older saved games fall back to the simulation.
+        ...pickLuck((o.scoring as luckyNumber.LuckyNumberScoring | undefined) ?? luckyNumber.scoreLuckyNumber(n)),
+        headline: `Solved in ${plural(n, 'guess', 'guesses')} — ${
+          o.scoring?.source === 'players' ? 'recent players average' : 'the average is'
+        } ${((o.scoring?.mean as number | undefined) ?? luckyNumber.REFERENCE_MEAN).toFixed(1)}`,
       };
     }
     case 'garden-of-chance': {

@@ -36,6 +36,11 @@ export interface DayTx {
   ): Promise<void>;
   /** Daily scores of other players who finished this game day (same as EngineStore.cohortScores). */
   cohortScores(): Promise<number[]>;
+  /**
+   * Guess counts of every player's completed Lucky Number games with
+   * fromDay ≤ game day < toDay (the reference for scoring Lucky Number).
+   */
+  luckyNumberCounts(fromDay: string, toDay: string): Promise<Record<number, number>>;
   /** Records the player's daily score once all five games are complete. */
   saveDailyScore(score: number, percentile: number): Promise<void>;
 }

@@ -16,7 +16,7 @@ export function LuckyNumberGame({ session, start, act, finish }: GameProps<'luck
       <div className="stage">
         <p>
           A secret number from 0 to 9999 is waiting. You’ll see how many digits it has. Each guess tells you higher or lower, and any
-          digit in the right place is revealed. The average careful player needs {luckyNumber.REFERENCE_MEAN.toFixed(1)} guesses.
+          digit in the right place is revealed. Your luck score compares your number of guesses with recent players’ results.
         </p>
         <button type="button" className="primary big" onClick={() => start()}>
           Start

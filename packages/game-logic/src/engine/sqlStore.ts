@@ -147,6 +147,16 @@ export class SqlStore implements EngineStore {
           );
           return rows.map((r) => r.s);
         },
+        async luckyNumberCounts(fromDay: string, toDay: string) {
+          const rows = await tx.query<{ g: number; n: number }>(
+            `select jsonb_array_length(outcome->'guesses') as g, count(*)::int as n
+             from public.game_results
+             where game_id = 'lucky-number' and completed and game_day >= $1::date and game_day < $2::date
+             group by 1`,
+            [fromDay, toDay],
+          );
+          return Object.fromEntries(rows.map((r) => [Number(r.g), Number(r.n)]));
+        },
         async saveDailyScore(score: number, percentile: number) {
           await tx.query(
             `insert into public.daily_scores (player_id, game_day, daily_score, percentile)

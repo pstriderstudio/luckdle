@@ -428,7 +428,8 @@ Replaces the earlier random-number-pattern idea.
 - [x] While guessing, show a fixed range for the digit count (e.g. “A 4-digit number from 0 to 9999”); it does not narrow as hints come in. (Playtest feedback, 2026-09-28; a narrowing range was tried and rejected.)
 - [x] The number stays on the server and every guess is checked there; guesses are saved as they are made, and leaving mid-game resumes with the same number and guesses.
 - [x] This game involves some skill (a careful player uses higher/lower and revealed digits); luck still matters through early near-hits and digit reveals.
-- [x] Scoring against a **simulated average**, not live players: the reference distribution is a careful player who always guesses the middle of the remaining possible numbers, simulated over all 10,000 numbers (mean 6.8 guesses; a random-possible-guess player averages 8.6). Score = 100 × (share of reference games needing more guesses + ½ share needing the same). More than 13 guesses scores 0.
+- [x] Scoring against **recent real players**: the reference is every completed Lucky Number play from the previous 30 game days (today excluded, so a score is fixed when the game finishes and saved with it). Score = 100 × (share of reference plays needing more guesses + ½ share needing the same); label cut-offs are chosen over that distribution like every other game, so the average player expects 50. Needing more guesses than every reference play scores 0.
+- [x] Fallback until there are 200 reference plays: a **simulated careful player** who always guesses the middle of the remaining possible numbers, simulated over all 10,000 numbers (mean 6.8 guesses; a random-possible-guess player averages 8.6). More than 13 guesses scores 0. The table below is for this fallback.
 
 | Guesses | Reference share | Score | Label |
 | --- | --- | --- | --- |
@@ -521,7 +522,7 @@ Replaces the earlier random-number-pattern idea.
 - [x] Leaderboard: top 100 daily scores for the game day, **signed-in players only** (signing in provides the display name and blocks throwaway anonymous retries). Anonymous players still get their percentile. Equal scores share a place; no hidden tie-breakers.
 - [x] Show both a personal percentile and a leaderboard after the user completes their games for the day (rules above; exact layout during design).
 - [x] Verify calibration by simulation: board choice is fair (all 462 boards within about ±10% of the field even for the top 0.1%); see [the calibration report](docs/analysis/2026-09-28-calibration.md) and `npm run calibrate`.
-- [ ] Decide Lucky Number scoring: skill moves its expected score from about 31 (casual) to 60 (expert), so for typical players choosing it lowers expected standing. Options in the calibration report; recommended: score against real players' recent results.
+- [x] Decide Lucky Number scoring: skill moved its expected score from about 31 (casual) to 60 (expert) against the simulated player. **Decided: score against real players' recent results** (see the calibration report and the Lucky Number section).
 - [x] Build the simulated field used when fewer than 20 players have finished.
 
 ## 5. Technical foundation
@@ -604,7 +605,7 @@ See [ADR 0001](docs/adr/0001-tech-stack.md).
 | No separate launch set; games are designed one at a time | Agreed |
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
 | Garden of Chance: plant and water a seed; tier × stacking mutations, rarest bloom ranks highest; Garden tab showing best bloom per species | Agreed |
-| Lucky Number: 0–9999 guessing game with higher/lower and digit reveals; scored against a simulated careful player's guess counts | Agreed |
+| Lucky Number: 0–9999 guessing game with higher/lower and digit reveals; scored against real players' guess counts from the last 30 game days (simulated careful player until there are 200 plays) | Agreed |
 | Cosmic Alignment: rings settle on their own; luck = tightness of Sun/Moon/Star alignment; continuous score, labels 20% each | Cut after playtesting (2026-09-28) |
 | Gem Breaker: three strikes to crack a geode; mineral × size × purity, rarest find ranks highest; Gems tab with personal bests | Agreed |
 | The Wishing Well: choose a wish theme, toss a coin, six object tiers, 60 collectible Curios | Agreed |
