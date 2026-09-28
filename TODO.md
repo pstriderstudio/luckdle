@@ -108,7 +108,7 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, and The Wishing Well. The remaining candidates are undesigned ideas.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, and Gem Breaker. The remaining candidates are undesigned ideas.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -120,7 +120,7 @@ Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing
 | Three Chests | Pick one of three chests, then see what the other two held. | Agreed; see the Three Chests section. |
 | Lucky Fishing | Make one cast and reveal a catch with a species, size, and unusual trait. | Agreed; see the Lucky Fishing section. Species writing and art remain. |
 | The Wishing Well | Make a wish, toss a coin, and receive a whimsical object themed to your wish. | Agreed; see the Wishing Well section. Object writing remains. |
-| Gem Breaker | Crack a geode to reveal a mineral with size and purity attributes. | Mineral pool, attribute distributions, cracking interaction, and collection display. |
+| Gem Breaker | Strike a geode three times to reveal a mineral with size and purity. | Agreed; see the Gem Breaker section. Mineral writing remains. |
 | Cosmic Alignment | Reveal the alignment of three spinning celestial rings. | Random-stop interaction, alignment measurement, outcome tiers, and animation. |
 | Lucky Number | Generate a number and discover rare patterns such as repeated digits or palindromes. | Number range, pattern definitions, overlapping patterns, and rarity calculation. |
 | Garden of Chance | Plant a mystery seed and reveal a bloom with possible mutations. | Plant pool, mutation odds, reveal timing, garden persistence, and garden capacity. |
@@ -145,7 +145,7 @@ Five fair six-sided dice, one tap to roll them all, no rerolls, and combination-
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
 - [x] Use the shared luck labels with dice cut-offs : No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
-- [x] No rewards: dice is a pure luck test. Collectibles come only from the card pack, Daily Summon, Lucky Fishing, and The Wishing Well.
+- [x] No rewards: dice is a pure luck test. Collectibles come only from the card pack, Daily Summon, Lucky Fishing, The Wishing Well, and Gem Breaker.
 - [ ] Implement roll generation, persistence, and board completion state; verify category probabilities by enumeration in tests.
 
 #### Combination probabilities
@@ -397,10 +397,22 @@ Renamed from Plinko / Falling Star. Reimagined so the centre is the prize rather
 - [x] Collection: a **Curios** tab with 60 objects (5 wishes × 6 tiers × 2 objects, equally likely within a wish and tier), following the agreed collection rules (owned or not, silhouettes for missing objects, no copies). The 10 Legendary objects are the long chase: at least ~330 tosses on average even with well-chosen wishes. No streak reward.
 - [ ] Write the 60 objects (names and one-line descriptions) for each wish and tier.
 
+### Gem Breaker — agreed design
+
+Structured like Lucky Fishing (rarest exact find ranks highest) with a different interaction.
+
+- [x] Format: one geode per day when this game is one of the user's five daily selections. Strike it three times (tap/click/Enter); each strike spreads cracks with light leaking through, brighter for rarer finds; the third strike splits it open. Generated and saved before the first strike; leaving mid-way resumes at the same strike; reduced-motion path uses fades.
+- [x] Mineral: Hollow (empty, dusty geode) 15%, Common 42%, Uncommon 25%, Rare 12%, Precious 5%, Mythic 1%. Pool: 30 minerals (10 Common, 8 Uncommon, 6 Rare, 4 Precious, 2 Mythic), equally likely within a tier.
+- [x] Size (minerals only; shown in carats): Chip 45%, Small 32%, Medium 17%, Large 5%, Giant 1%. Purity: Cloudy 60%, Clear 30%, Brilliant 9%, Flawless 1%.
+- [x] Ranking: rank finds by the probability of mineral tier × size × purity (rarer first; equal probabilities tie). Hollow is always lowest.
+- [x] Labels (per-game cut-offs): Jinxed = Hollow (15.0%); Unlucky = Common chip/small cloudy (19.4%); Fair Luck 21.5%; Lucky 21.7%; Charmed 22.3% (from a clear Rare chip or any find at least that rare). Result shows the gem, size, purity, “about 1 in N”, label, and score.
+- [x] Collection: a **Gems** tab of 30 minerals (owned or not, silhouettes for missing), plus personal bests per mineral: largest size and purest grade found. Derived from saved finds. No streak reward. Pace at one geode per day: full tab ~283 days typical, ~597 for the unluckiest 10%.
+- [ ] Write the 30 minerals (names, carat ranges, short descriptions).
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
-- [x] Organize the collection into separate Cards, Characters, Fish, and Curios tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
+- [x] Organize the collection into separate Cards, Characters, Fish, Curios, and Gems tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
 - [x] Show undiscovered items as numbered silhouettes with their rarity, plus progress such as “37 / 120 collected”. Show no quantities (ownership only) and no variants at launch.
 - [x] Store collections on a server under an anonymous player ID created on first visit and kept in the browser, with no account needed to play. Optional sign-in later links the anonymous player to an account for cross-device sync and a leaderboard name. Without signing in, clearing browser data loses the collection. The tarot introduction stays browser-only as agreed.
 - [ ] Derive ownership from the player's saved official results (packs, later summons) rather than a separately awarded list, so an item is owned if any saved result contains it. Store stable item identifiers, item type, and rarity, plus the game day each item was first obtained. No copy counts.
@@ -525,6 +537,7 @@ Renamed from Plinko / Falling Star. Reimagined so the centre is the prize rather
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | No separate launch set; games are designed one at a time | Agreed |
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
+| Gem Breaker: three strikes to crack a geode; mineral × size × purity, rarest find ranks highest; Gems tab with personal bests | Agreed |
 | The Wishing Well: choose a wish theme, toss a coin, six object tiers, 60 collectible Curios | Agreed |
 | Three Chests: fair pick of three independently filled chests; luck = your treasure, then chests beaten | Agreed |
 | Falling Star: one wished star per day, funnel board with slot widths matching odds, rare narrow centre (Supernova 3%) | Agreed |
