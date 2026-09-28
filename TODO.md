@@ -108,14 +108,14 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, and Lucky Fishing. The remaining candidates are undesigned ideas.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, and Coin Streak. The remaining candidates are undesigned ideas.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
 | Dice of Destiny | One tap rolls all five dice once, with no rerolls. | Agreed; see the Dice of Destiny section. |
 | Mystery Card Pack | Open a larger trading-card-style booster with multiple rarities, an opening animation, and a rare card pulled upward and revealed. | Pack size, slot structure, scoring, rarity distribution, guarantees, variants, duplicates, and collection storage. |
 | Daily Summon | A gacha-style 10-pull of characters from an original fantasy cast. | Agreed; see the Daily Summon section. Character writing and art remain. |
-| Coin Streak | Flip until tails ends the run; measure the number of consecutive heads. | Manual versus automatic flips, outcome probabilities, scoring, and long-streak handling. |
+| Coin Streak | Call heads or tails before each flip and keep flipping until the second wrong call. | Agreed; see the Coin Streak section. |
 | Plinko / Falling Star | Watch a dropped ball or star bounce through pegs into a reward slot. | Board layout, drop-point choice, outcome distribution, and physics versus a preselected outcome. |
 | Three Chests | Choose a chest, then reveal its contents and those of the other two. | Reward pool, how contents are assigned, and reveal order. |
 | Lucky Fishing | Make one cast and reveal a catch with a species, size, and unusual trait. | Agreed; see the Lucky Fishing section. Species writing and art remain. |
@@ -326,6 +326,29 @@ One cast per day when this game is one of the user's five daily selections. Pure
 - [x] Pace: with one cast per day, a typical player completes the log in about 550 days (90%: about 1,190); the two Mythics are the long chase.
 - [ ] Write the 37 species (names, length ranges, short descriptions), 5 junk items, and trait names for each trait level.
 
+### Coin Streak — agreed design
+
+- [x] Format: one run per day when this game is one of the user's five daily selections. The player calls heads or tails before every flip (the last call is remembered as the default) and taps to flip. The run ends on the **second** wrong call (two lives). Luck = total correct calls in the run.
+- [x] Fair coin: every call has a 50% chance, so the call never changes the odds. The run length is generated and saved before the first flip (distribution below) and the flips are then shown to match or miss the player's calls accordingly, which is statistically identical to live flipping. Leaving mid-run resumes at the same flip.
+- [x] Pacing: tap for each flip; never automatic. After a few flips a **Keep going** option speeds up the flips but still stops on each miss. No cap on streak length.
+- [x] Probability of exactly k correct calls: (k + 1) / 2^(k+2). Shared 0–100 luck score: 100 × (1 − (k + 2) / 2^(k+1) + (k + 1) / 2^(k+3)).
+
+| Correct calls | Probability | About 1 in | Score | Label |
+| --- | --- | --- | --- | --- |
+| 0 | 25% | 4 | 12.50 | Jinxed |
+| 1 | 25% | 4 | 37.50 | Unlucky |
+| 2 | 18.75% | 5.3 | 59.38 | Fair Luck |
+| 3 | 12.5% | 8 | 75.00 | Lucky |
+| 4 | 7.81% | 13 | 85.16 | Charmed |
+| 5 | 4.69% | 21 | 91.41 | Charmed |
+| 7 | 1.56% | 64 | 97.27 | Charmed |
+| 10 | 0.27% | 372 | 99.55 | Charmed |
+| 20 | 0.0005% | 199,729 | ~100 | Charmed |
+
+- [x] Labels (per-game cut-offs): 0 Jinxed (25%), 1 Unlucky (25%), 2 Fair Luck (18.75%), 3 Lucky (12.5%), 4 or more Charmed (18.75%).
+- [x] Result: the streak, its rarity (e.g. “5 correct calls — about 1 in 21 runs”), label, and score. No collectibles or rewards; reduced-motion path uses fades.
+- [x] One-life sudden death was rejected because half of all runs would end on the first flip as Jinxed.
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
@@ -453,4 +476,5 @@ One cast per day when this game is one of the user's five daily selections. Pure
 | Tarot outlook uses the shared labels Jinxed / Unlucky / Fair Luck / Lucky / Charmed | Agreed; replaces Bad luck / Minor bad luck / Neutral / Minor good luck / Good luck |
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | No separate launch set; games are designed one at a time | Agreed |
+| Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
 | Lucky Fishing: one cast/day; type, size class, and trait; rarest exact catch ranks highest, junk lowest; Fish tab with personal bests | Agreed |
