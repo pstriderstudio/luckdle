@@ -11,6 +11,7 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 - Game boards do not display results. Decide how results are presented separately; do not assume score or outcome previews on game panels.
 - Provide a collection section showing the cards and gacha characters the user has pulled.
 - Score every game on one shared 0–100 luck scale: the percentage of that game's possible results ranked below yours, plus half of those that tie with it. Equal results get equal scores; no hidden tie-breakers.
+- Pair every game's luck score with one of five plain-language game luck labels, each covering an equal 20-point band: 0–19.99 **Jinxed**, 20–39.99 **Unlucky**, 40–59.99 **Even Odds**, 60–79.99 **Lucky**, 80–100 **Charmed**. Game labels use different words from the tarot outlook levels to keep tarot separate. The bands are agreed; the wording is a draft.
 - Give dice outcomes both a plain-language luck label and a numerical luck score. After users finish their games for the day, compare their daily luck with other users. The scoring scale, aggregation, and comparison presentation remain to be designed.
 - Greet first-time visitors on the home page with a tarot fortune before they enter the other games.
 - Tarot is a skippable, one-time introduction for first-time visitors. It cannot be revisited or requested again after completion or skipping.
@@ -145,7 +146,7 @@ Five dice, one tap to roll them all, no rerolls, and combination-based luck are 
 - [ ] Decide attempts. Proposed: one official roll when this game is one of the user's five daily selections, with the result saved and no reroll.
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
-- [ ] Define the plain-language luck-label thresholds.
+- [x] Use the shared game luck labels (see Agreed direction). With the proposed ranking: No combination → Jinxed; One pair → Unlucky; Two pairs → Lucky; Three of a kind or better → Charmed.
 - [ ] Decide any rewards separately; collectible rewards are not currently agreed.
 - [ ] Once rules are approved, enumerate outcomes to verify category probabilities and implement roll generation, persistence, and board completion state.
 
@@ -198,7 +199,16 @@ Under the approved odds, each wildcard has a 10% chance of Rare-or-better, so a 
 
 - [x] Choose podium scoring priority: compare the highest rarity first, then the second-highest, then the third-highest. One Secret Rare outranks any pack without one; supporting pulls distinguish packs that share the same highest tier. Additive rarity points were rejected.
 - [x] Derive the numerical luck score from the complete distribution of podium outcomes under the approved slot odds (table below). Equal rarity triplets tie; no hidden tie-breakers.
-- [ ] Define the plain-language luck-label thresholds for packs.
+- [x] Use the shared game luck labels: R / U / U → Unlucky; R / R / U, R / R / R and SR / U / U → Lucky; every other podium → Charmed. Packs cannot be Jinxed because every pack contains a Rare.
+
+#### How often each game luck label occurs
+
+The score is a percentile, but these games have a few results that each cover a large share of outcomes, so labels do not appear 20% of the time each, and some never appear. The five-game daily score will be smoother, so every label can occur there.
+
+| Game | Jinxed | Unlucky | Even Odds | Lucky | Charmed |
+| --- | --- | --- | --- | --- | --- |
+| Dice of Destiny (proposed ranking) | 6.17% | 46.30% | never | 23.15% | 24.38% |
+| Mystery Card Pack | never | 60.75% | never | 26.02% | 13.23% |
 
 #### Podium outcomes and luck scores
 
@@ -346,7 +356,8 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Already-owned cards below Rare count among the 12 but skip their individual reveal, with no replacement | Agreed; pack odds remain unchanged |
 | Top-three rarest cards from the current pack form a podium and determine pack luck | Agreed |
 | Podium ranked by highest rarity first, then second, then third; equal rarity triplets tie | Agreed |
-| Shared 0–100 luck score for every game: % of results ranked below yours, plus half of ties | Agreed; label thresholds remain open |
+| Shared 0–100 luck score for every game: % of results ranked below yours, plus half of ties | Agreed |
+| Five game luck labels in equal 20-point bands, worded differently from tarot | Agreed; draft wording Jinxed / Unlucky / Even Odds / Lucky / Charmed |
 | Supplied game-menu image as a board-layout reference | Recorded; art direction remains deferred |
 | First-time home-page tarot greeting with five fortune levels | Agreed |
 | Tarot should feel like a reading rather than a simple card pick | Agreed |
