@@ -108,7 +108,7 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, and Coin Streak. The remaining candidates are undesigned ideas.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, and Falling Star. The remaining candidates are undesigned ideas.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -116,7 +116,7 @@ Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing
 | Mystery Card Pack | Open a larger trading-card-style booster with multiple rarities, an opening animation, and a rare card pulled upward and revealed. | Pack size, slot structure, scoring, rarity distribution, guarantees, variants, duplicates, and collection storage. |
 | Daily Summon | A gacha-style 10-pull of characters from an original fantasy cast. | Agreed; see the Daily Summon section. Character writing and art remain. |
 | Coin Streak | Call heads or tails before each flip and keep flipping until the second wrong call. | Agreed; see the Coin Streak section. |
-| Plinko / Falling Star | Watch a dropped ball or star bounce through pegs into a reward slot. | Board layout, drop-point choice, outcome distribution, and physics versus a preselected outcome. |
+| Falling Star | Make a wish: a star falls from the sky, bounces through pegs, and lands in a funnel of slots where the narrow centre is rarest. | Agreed; see the Falling Star section. |
 | Three Chests | Choose a chest, then reveal its contents and those of the other two. | Reward pool, how contents are assigned, and reveal order. |
 | Lucky Fishing | Make one cast and reveal a catch with a species, size, and unusual trait. | Agreed; see the Lucky Fishing section. Species writing and art remain. |
 | The Wishing Well | Toss a coin into a well and receive a whimsical object. | Item pool, rarity, tone, reveal interaction, and whether objects persist. |
@@ -349,6 +349,18 @@ One cast per day when this game is one of the user's five daily selections. Pure
 - [x] Result: the streak, its rarity (e.g. “5 correct calls — about 1 in 21 runs”), label, and score. No collectibles or rewards; reduced-motion path uses fades.
 - [x] One-life sudden death was rejected because half of all runs would end on the first flip as Jinxed.
 
+### Falling Star — agreed design
+
+Renamed from Plinko / Falling Star. Reimagined so the centre is the prize rather than the most common landing.
+
+- [x] Format: one star per day when this game is one of the user's five daily selections. The player taps **Make a wish**; the star streaks in from a random point along the top (no aiming), bounces through pegs, and settles into a slot.
+- [x] Board: a funnel of 11 slots that narrow toward the centre. Outer to centre: Dust (2 slots), Spark (2), Glimmer (2), Shine (2), Radiant (2), Supernova (1, centre). Each slot's width is proportional to its probability, so the board honestly shows the odds.
+- [x] Odds by tier (split evenly between a tier's two slots): Dust 25%, Spark 22%, Glimmer 20%, Shine 16%, Radiant 14%, Supernova 3% (about 1 in 33).
+- [x] Outcome generated and saved before the drop; the bounce path is choreographed to reach that slot (not live physics), with near-misses around the narrow centre. Leaving mid-drop returns to the same result.
+- [x] Score and labels (shared 0–100 score; per-game cut-offs): Dust 12.5 Jinxed (25%); Spark 36 Unlucky (22%); Glimmer 57 Fair Luck (20%); Shine 75 Lucky (16%); Radiant 90 and Supernova 98.5 Charmed (17% combined).
+- [x] Result: the slot, its “about 1 in N”, label, and score. No collectibles or rewards; reduced-motion path uses fades.
+- [x] A classic centre-heavy Galton board was rejected: its middle slots would make about 45% of single drops Jinxed.
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
@@ -477,4 +489,5 @@ One cast per day when this game is one of the user's five daily selections. Pure
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | No separate launch set; games are designed one at a time | Agreed |
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
+| Falling Star: one wished star per day, funnel board with slot widths matching odds, rare narrow centre (Supernova 3%) | Agreed |
 | Lucky Fishing: one cast/day; type, size class, and trait; rarest exact catch ranks highest, junk lowest; Fish tab with personal bests | Agreed |
