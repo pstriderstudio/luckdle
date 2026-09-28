@@ -13,6 +13,15 @@ export * from './items.ts';
 export * from './catalog.ts';
 export * from './daily.ts';
 export * from './board.ts';
+export * from './collections.ts';
+
+// Game engine shared by the browser playtest and the Supabase Edge Function.
+export * from './engine/api.ts';
+export * from './engine/store.ts';
+export * from './engine/memoryStore.ts';
+export * from './engine/sqlStore.ts';
+export { collectionOf, GameEngine, GameError, type PlayerContext, validateRequest } from './engine/engine.ts';
+export * as rules from './engine/rules.ts';
 
 export * as dice from './games/dice.ts';
 export * as cardPack from './games/cardPack.ts';

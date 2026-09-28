@@ -11,7 +11,11 @@
     "build": "npm run build -w @luckdle/web",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -p packages/game-logic && tsc -p apps/web"
+    "typecheck": "tsc -p packages/game-logic && tsc -p packages/game-logic/tsconfig.test.json && tsc -p apps/web",
+    "functions:sync": "node scripts/sync-functions.mjs",
+    "supabase:start": "supabase start",
+    "supabase:functions": "npm run functions:sync && supabase functions serve --env-file supabase/functions.dev.env",
+    "supabase:deploy": "npm run functions:sync && supabase functions deploy game"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

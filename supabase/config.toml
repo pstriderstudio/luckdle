@@ -12,3 +12,7 @@ enable_anonymous_sign_ins = true
 [edge_runtime]
 enabled = true
 policy = "per_worker"
+
+# The game service requires a signed-in (possibly anonymous) player.
+[functions.game]
+verify_jwt = true

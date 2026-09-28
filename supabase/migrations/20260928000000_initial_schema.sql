@@ -1,16 +1,16 @@
 -- Luckdle initial schema (see docs/adr/0001-tech-stack.md).
 --
 -- Rules enforced here:
---   * Official results are written only by Edge Functions (service role).
---     Players can read their own rows and never write results.
+--   * Official results are written only by the `game` Edge Function, which
+--     connects as the database owner. Players can read their own rows and
+--     never write results.
 --   * One official result per (player, game day, game).
 --   * Hidden outcome data (chest contents before the pick, the Lucky Number
---     secret, unrevealed cards) lives in game_results.outcome, which players
---     cannot select; they see only game_results.revealed.
+--     secret, the coin run, unrevealed cards) lives in game_results.outcome,
+--     which players cannot select.
 --   * Collections are derived from saved results (result_items), not a
 --     separately awarded list.
---   * A game day is the date whose 3:00 AM America/New_York reset starts it;
---     it is computed on the server.
+--   * A game day is the date whose 3:00 AM America/New_York reset starts it.
 
 -- ---------------------------------------------------------------------------
 -- Helpers
@@ -55,19 +55,20 @@ insert into public.games (id, board, name) values
   ('wishing-well', 'night-sky', 'The Wishing Well');
 
 -- ---------------------------------------------------------------------------
--- Personal daily board: up to five picks per game day.
+-- Personal daily board: up to five picks per game day, in display order.
+-- A row exists once the day's board has been created (possibly empty), so a
+-- cleared board is not carried over again.
 
-create table public.board_slots (
+create table public.daily_boards (
   player_id uuid not null references public.players (id) on delete cascade,
   game_day date not null,
-  game_id text not null references public.games (id),
-  position smallint not null check (position between 0 and 4),
-  primary key (player_id, game_day, game_id),
-  unique (player_id, game_day, position) deferrable initially deferred
+  games text[] not null default '{}' check (cardinality(games) <= 5),
+  updated_at timestamptz not null default now(),
+  primary key (player_id, game_day)
 );
 
 -- ---------------------------------------------------------------------------
--- Official results. The row is created (and the outcome saved) before any
+-- Official results. The row (with the full outcome) is created before any
 -- animation; the game is locked from that moment.
 
 create table public.game_results (
@@ -77,10 +78,9 @@ create table public.game_results (
   game_id text not null references public.games (id),
   -- Full server-side outcome. Never exposed to players directly.
   outcome jsonb not null,
-  -- What the player has been shown so far, and where to resume.
-  revealed jsonb not null default '{}'::jsonb,
+  -- Client reveal position, so leaving and returning resumes at the same point.
   progress jsonb not null default '{}'::jsonb,
-  -- Set when the result is final (e.g. after the chest pick or the solving guess).
+  completed boolean not null default false,
   score numeric(9, 6) check (score between 0 and 100),
   label text check (label in ('Jinxed', 'Unlucky', 'Fair Luck', 'Lucky', 'Charmed')),
   completed_at timestamptz,
@@ -123,13 +123,15 @@ create table public.item_views (
 );
 
 -- ---------------------------------------------------------------------------
--- Daily scores: written when a player finishes all five games; the
--- percentile is finalised at the 3 AM reset.
+-- Daily scores: written when a player finishes all five games, with the
+-- live percentile at that moment; final_percentile / final_label are set
+-- after the 3 AM reset by finalize_game_days().
 
 create table public.daily_scores (
   player_id uuid not null references public.players (id) on delete cascade,
   game_day date not null,
   daily_score numeric(9, 6) not null check (daily_score between 0 and 100),
+  percentile numeric(9, 6) not null check (percentile between 0 and 100),
   final_percentile numeric(9, 6),
   final_label text check (final_label in ('Jinxed', 'Unlucky', 'Fair Luck', 'Lucky', 'Charmed')),
   finalized_at timestamptz,
@@ -138,6 +140,51 @@ create table public.daily_scores (
 );
 
 create index daily_scores_day_idx on public.daily_scores (game_day, daily_score);
+
+-- Finalises every finished game day that has unfinalised scores. With at
+-- least 20 finishers the percentile is against the real cohort (other
+-- players scoring lower, plus half of ties); otherwise the live percentile
+-- against the simulated field stands. Returns the number of rows finalised.
+create function public.finalize_game_days()
+returns integer
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  finalized integer;
+begin
+  with pending_days as (
+    select distinct game_day
+    from public.daily_scores
+    where finalized_at is null and game_day < public.luckdle_game_day(now())
+  ),
+  ranked as (
+    select d.player_id,
+           d.game_day,
+           d.percentile,
+           count(*) over (partition by d.game_day) as cohort,
+           rank() over (partition by d.game_day order by d.daily_score) - 1 as lower,
+           count(*) over (partition by d.game_day, d.daily_score) - 1 as ties
+    from public.daily_scores d
+    join pending_days p on p.game_day = d.game_day
+  ),
+  computed as (
+    select player_id,
+           game_day,
+           case when cohort >= 20 then 100.0 * (lower + ties / 2.0) / (cohort - 1) else percentile end as pct
+    from ranked
+  )
+  update public.daily_scores s
+     set final_percentile = c.pct,
+         final_label = (array['Jinxed', 'Unlucky', 'Fair Luck', 'Lucky', 'Charmed'])[least(5, floor(c.pct / 20)::int + 1)],
+         finalized_at = now()
+    from computed c
+   where s.player_id = c.player_id and s.game_day = c.game_day and s.finalized_at is null;
+  get diagnostics finalized = row_count;
+  return finalized;
+end;
+$$;
 
 -- Top 100 daily scores for a game day, signed-in players only. Equal scores
 -- share a place.
@@ -162,12 +209,13 @@ as $$
 $$;
 
 -- ---------------------------------------------------------------------------
--- Row-level security: players read only their own rows. All game writes go
--- through Edge Functions using the service role, which bypasses RLS.
+-- Row-level security: players read only their own rows (defence in depth —
+-- the web app goes through the Edge Function). Writes go through the
+-- function's owner connection, which bypasses RLS.
 
 alter table public.players enable row level security;
 alter table public.games enable row level security;
-alter table public.board_slots enable row level security;
+alter table public.daily_boards enable row level security;
 alter table public.game_results enable row level security;
 alter table public.result_items enable row level security;
 alter table public.item_views enable row level security;
@@ -175,22 +223,20 @@ alter table public.daily_scores enable row level security;
 
 create policy "games are public" on public.games for select using (true);
 create policy "read own player" on public.players for select using (id = auth.uid());
-create policy "read own board" on public.board_slots for select using (player_id = auth.uid());
+create policy "read own board" on public.daily_boards for select using (player_id = auth.uid());
 create policy "read own results" on public.game_results for select using (player_id = auth.uid());
 create policy "read own items" on public.result_items for select using (player_id = auth.uid());
 create policy "read own views" on public.item_views for select using (player_id = auth.uid());
-create policy "mark own items viewed" on public.item_views for insert with check (player_id = auth.uid());
 create policy "read own daily scores" on public.daily_scores for select using (player_id = auth.uid());
 
 -- Column privileges: the hidden outcome is never readable by players.
 revoke all on public.game_results from anon, authenticated;
-grant select (id, player_id, game_day, game_id, revealed, progress, score, label, completed_at, created_at)
+grant select (id, player_id, game_day, game_id, progress, completed, score, label, completed_at, created_at)
   on public.game_results to authenticated;
 
-revoke insert, update, delete on public.players, public.board_slots, public.result_items, public.daily_scores
+revoke insert, update, delete on public.players, public.daily_boards, public.result_items, public.item_views, public.daily_scores
   from anon, authenticated;
-revoke all on public.item_views from anon;
-revoke update, delete on public.item_views from authenticated;
 
+revoke all on function public.finalize_game_days() from public, anon, authenticated;
 revoke all on function public.leaderboard(date) from public;
 grant execute on function public.leaderboard(date) to anon, authenticated;

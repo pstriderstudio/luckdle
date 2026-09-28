@@ -58,7 +58,7 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 ### Implementation work to define after those decisions
 
 - [ ] Document the approved reading flow and screen states.
-- [ ] Implement three up-and-down deck shuffles using mouse/touch drag gestures, with visible progress from 0/3 to 3/3 and no cut step. Define gesture travel thresholds and count complete cycles without counting tiny movements or duplicate pointer events. Provide an equivalent keyboard-accessible control.
+- [x] Implement three up-and-down deck shuffles using mouse/touch drag gestures, with visible progress from 0/3 to 3/3 and no cut step. Define gesture travel thresholds and count complete cycles without counting tiny movements or duplicate pointer events. Provide an equivalent keyboard-accessible control.
 - [ ] Define card data: identifier, name, artwork, meanings, and any supported orientations or position-specific interpretations.
 - [x] Choose a reading-generation approach: fully authored interpretations and connecting passages, assembled by rules.
 - [ ] Author and review the 468 base card/orientation/position interpretations (78 × 2 × 3), using the chosen interpretation reference.
@@ -66,7 +66,7 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 - [ ] Review representative spreads, including mixed themes, reversed cards, and challenging guidance cards, for coherent meaning and natural prose.
 - [ ] Specify card selection, randomization, duplicate prevention, and the relationship between player gestures and the final draw.
 - [ ] Author card/orientation/position values, choose numerical weights and five-level thresholds so every label is reachable, and inspect the resulting outlook distribution. Use the same interpretations for scoring and prose; do not force preset outcome frequencies.
-- [ ] Implement browser persistence for shuffle progress, deck order/orientations, selections, revealed cards, reading progress, and completed/skipped status so an interruption cannot redraw the spread. Completion or skipping routes future visits directly to the games; no history/replay route or daily reset. Discard temporary reading data after completion or skipping while retaining the dismissal status.
+- [x] Implement browser persistence for shuffle progress, deck order/orientations, selections, revealed cards, reading progress, and completed/skipped status so an interruption cannot redraw the spread. Completion or skipping routes future visits directly to the games; no history/replay route or daily reset. Discard temporary reading data after completion or skipping while retaining the dismissal status.
 - [ ] Keep authored content separate from reading assembly so the library and composition approach can be expanded later.
 - [ ] Design the welcome, deck interactions, card reveals, combined reading, and transition into games.
 - [ ] Support mobile, keyboard use, readable card meanings, and reduced-motion preferences.
@@ -146,7 +146,7 @@ Five fair six-sided dice, one tap to roll them all, no rerolls, and combination-
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
 - [x] Use the shared luck labels with dice cut-offs : No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
 - [x] No rewards: dice is a pure luck test. Collectibles come only from the card pack, Daily Summon, Lucky Fishing, The Wishing Well, Gem Breaker, and Garden of Chance.
-- [ ] Implement roll generation, persistence, and board completion state; verify category probabilities by enumeration in tests.
+- [x] Implement roll generation, persistence, and board completion state; verify category probabilities by enumeration in tests.
 
 #### Combination probabilities
 
@@ -283,7 +283,7 @@ The most common pack (R / C / C, 31.69%) is Jinxed with a score of 15.84. Scores
 - [x] Make pulled cards persistent collectibles visible in the site's collection section alongside gacha characters.
 - [x] Card list size: 150 cards — 60 Common, 40 Uncommon, 25 Rare, 15 Super Rare, 7 Ultra Rare, 3 Secret Rare. Within a rolled rarity, each card of that rarity is equally likely (unless a later rule changes this). Simulated collection pace for a player opening one pack every day (typical player / unluckiest 10%): all Commons and Uncommons ~47 / 68 packs, all Rares ~100 / 153, all Super Rares ~199 / 314, full set ~669 / 1,408. Secret Rares set the pace of completion.
 - [x] Weekly streak reward: new-card priority. A streak counts consecutive game days (3 AM Eastern reset) on which the player completes at least one official game. From the 7th consecutive day until a day is missed, the rarity of each slot is still rolled with the normal odds, but the card within that rarity is chosen uniformly from cards the player does not own yet (counting cards already chosen earlier in the same pack as owned); if every card of that rarity is owned, choose from all of them. Rarity odds, luck scores, labels, and comparisons are unchanged because they depend only on rarity. Missing a day resets the streak to 0.
-- [ ] Show the current streak and when new-card priority is active.
+- [x] Show the current streak and when new-card priority is active.
 - [x] Daily Summon gets no streak reward for now; the reward applies to card packs only.
 - [ ] Simulate collection pace with the streak reward. Rough estimate for a player on an unbroken streak: all Rares ~28 packs instead of ~100; full set ~13 months instead of ~22, limited by Secret Rare pulls.
 - [x] Define collection storage: server-side, owned or not owned per card with no copy counts, so duplicates (including same-pack duplicates) add nothing. No special variants (foil, alternate art) at launch. Defer artwork direction until the games are finished.
@@ -462,10 +462,10 @@ Replaces the earlier random-number-pattern idea.
 - [x] Organize the collection into separate Cards, Characters, Fish, Curios, Gems, and Garden tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
 - [x] Show undiscovered items as numbered silhouettes with their rarity, plus progress such as “37 / 120 collected”. Show no quantities (ownership only) and no variants at launch.
 - [x] Store collections on a server under an anonymous player ID created on first visit and kept in the browser, with no account needed to play. Optional sign-in later links the anonymous player to an account for cross-device sync and a leaderboard name. Without signing in, clearing browser data loses the collection. The tarot introduction stays browser-only as agreed.
-- [ ] Derive ownership from the player's saved official results (packs, later summons) rather than a separately awarded list, so an item is owned if any saved result contains it. Store stable item identifiers, item type, and rarity, plus the game day each item was first obtained. No copy counts.
-- [ ] Ensure resuming a pack opening cannot award the same pack twice; preserve generated contents and apply ownership changes once. Agreed behavior: cards are saved and awarded before the wrapper opens; resuming returns to the same card in the reveal.
+- [x] Derive ownership from the player's saved official results (packs, later summons) rather than a separately awarded list, so an item is owned if any saved result contains it. Store stable item identifiers, item type, and rarity, plus the game day each item was first obtained. No copy counts.
+- [x] Ensure resuming a pack opening cannot award the same pack twice; preserve generated contents and apply ownership changes once. Agreed behavior: cards are saved and awarded before the wrapper opens; resuming returns to the same card in the reveal.
 - [x] Check ownership for reveal skipping once, when the pack is generated. Within one pack, the first copy of a card below Rare is revealed (as New if unowned) and later copies are skipped.
-- [ ] Keep game odds and comparison scores independent of collection maturity: determine the top three and the score from all 12 actual pulls, including any skipped duplicate reveals. An already-owned low-rarity card that qualifies for the podium appears there with an Owned tag, without replaying its individual reveal.
+- [x] Keep game odds and comparison scores independent of collection maturity: determine the top three and the score from all 12 actual pulls, including any skipped duplicate reveals. An already-owned low-rarity card that qualifies for the podium appears there with an Owned tag, without replaying its individual reveal.
 
 ## 3. Game-selection boards and personal daily board
 
@@ -491,11 +491,11 @@ Replaces the earlier random-number-pattern idea.
 ### Implementation work once board behavior is settled
 
 - [x] Define a game catalog with stable identifiers, category membership, display names, and placeholder panels (`packages/game-logic/src/catalog.ts`).
-- [ ] Build category-board browsing, game selection, and a personal board showing the five selected games.
-- [ ] Implement board states accessibly (never outcomes, scores, or result previews): category boards tag picked games **Picked**; personal-board panels show **Ready** or **Played**, plus a countdown to the 3 AM reset once all five are played.
-- [ ] Persist daily selections and progress, enforce the five-game selection limit, and apply the agreed reset and swap rules.
+- [x] Build category-board browsing, game selection, and a personal board showing the five selected games.
+- [x] Implement board states accessibly (never outcomes, scores, or result previews): category boards tag picked games **Picked**; personal-board panels show **Ready** or **Played**, plus a countdown to the 3 AM reset once all five are played.
+- [x] Persist daily selections and progress, enforce the five-game selection limit, and apply the agreed reset and swap rules.
 - [ ] Make board navigation and selection usable on mobile and with a keyboard.
-- [ ] Route completed/skipped tarot introductions into the board experience without counting tarot toward the five daily game choices.
+- [x] Route completed/skipped tarot introductions into the board experience without counting tarot toward the five daily game choices.
 
 ## 4. Shared daily experience and daily luck score
 
@@ -504,7 +504,7 @@ Replaces the earlier random-number-pattern idea.
 - [x] Players receive independent results with equal odds; outcomes are not shared between players.
 - [x] Use one global daily reset at the same moment for everyone, defining a single shared game day for results and comparisons.
 - [x] Reset at 3:00 AM US Eastern time (America/New_York), following daylight saving: 07:00 UTC in summer, 08:00 UTC in winter. Each game day runs from one 3 AM reset to the next.
-- [ ] Show a clear countdown to the next reset in the player's local time.
+- [x] Show a clear countdown to the next reset in the player's local time.
 - [x] Collections and history begin anonymously on the server; an account is optional.
 - [x] Compare users' daily luck with other users after they finish their games for the day. Keep the one-time tarot introduction separate.
 - [x] Daily report: daily score, daily label, and percentile (e.g. “Luckier than 82% of players today”), then one row per game with its label and score. Tarot is excluded. Before all five games are played it shows progress (e.g. “3 of 5 played”).
@@ -520,7 +520,7 @@ Replaces the earlier random-number-pattern idea.
 - [x] Leaderboard: top 100 daily scores for the game day, **signed-in players only** (signing in provides the display name and blocks throwaway anonymous retries). Anonymous players still get their percentile. Equal scores share a place; no hidden tie-breakers.
 - [x] Show both a personal percentile and a leaderboard after the user completes their games for the day (rules above; exact layout during design).
 - [ ] Verify calibration by simulation: every game's expected score is 50, but games differ in spread (lumpy games like dice vary more), so check how often different boards reach the top of the leaderboard, and account for Lucky Number's skill element. Revisit for any later paid-user game counts.
-- [ ] Build the simulated field used when fewer than 20 players have finished.
+- [x] Build the simulated field used when fewer than 20 players have finished.
 
 ## 5. Technical foundation
 
@@ -531,6 +531,9 @@ See [ADR 0001](docs/adr/0001-tech-stack.md).
 - [x] Player identity: Supabase anonymous user on first visit, linkable to email/Google/Apple. Results in Postgres with a unique (player, game day, game) constraint for one official result per play; row-level security lets players read only their own revealed data and never write results.
 - [x] Game day identifier: the calendar date whose 3:00 AM America/New_York reset starts it, computed on the server. Tarot stays in browser storage as agreed; daily results live in Postgres.
 - [x] Scaffold the repository: web app, Supabase project (migrations, Edge Functions), and a shared game-logic package with tests (outcome distributions and score tables from this document as test data). Rules for all twelve games are implemented in `packages/game-logic`; games are not yet wired to Edge Functions or playable in the web app.
+- [x] Game engine: one TypeScript engine (`packages/game-logic/src/engine`) holds every rule for boards, official plays, reveals, collections, and the daily report. The browser playtest runs it over an in-memory store; the Supabase `game` Edge Function runs it over Postgres. See [ADR 0002](docs/adr/0002-shared-game-engine.md).
+- [x] Backend: schema and RLS, the `game` Edge Function (anonymous players, server-side outcomes, hidden data never returned), live percentile against real finishers (simulated field under 20), hourly `finalize_game_days()` job for final percentiles and labels. Tested against Postgres (PGlite) and with the real postgres.js driver.
+- [ ] Run the backend on the Supabase local stack (Docker) and then a hosted project; wire optional sign-in (email/Google/Apple), display names, and the leaderboard UI.
 - [ ] Define loading, error, and recovery behavior for the approved features.
 - [ ] Verify mobile layout, accessibility, daily limits, persistence, and outcome calculations for the initial release.
 

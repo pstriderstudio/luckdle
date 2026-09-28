@@ -95,28 +95,36 @@ function PlaytestBar({ onChanged, onReplayTarot }: { onChanged: () => void; onRe
     await run(fn);
     onChanged();
   };
+  const { resetToday, resetAll } = pt;
   return (
     <footer className="playtest" aria-label="Playtest controls">
       <span>
-        <strong>Playtest</strong>
-        <span className="playtest-note"> · outcomes are generated in this browser</span> · day {snapshot.gameDay}
+        <strong>{service.kind === 'server' ? 'Dev tools' : 'Playtest'}</strong>
+        <span className="playtest-note">
+          {service.kind === 'server' ? ' · local game server' : ' · outcomes are generated in this browser'}
+        </span>{' '}
+        · day {snapshot.gameDay}
         {snapshot.playtest?.dayOffset ? ` (+${snapshot.playtest.dayOffset})` : ''}
       </span>
       <span className="playtest-actions">
         <button type="button" onClick={() => act(pt.nextDay)}>
           Next day
         </button>
-        <button type="button" onClick={() => act(pt.resetToday)}>
-          Reset today
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            if (confirm('Erase all playtest data (boards, results, collection)?')) void act(pt.resetAll);
-          }}
-        >
-          Reset all
-        </button>
+        {resetToday && (
+          <button type="button" onClick={() => act(resetToday)}>
+            Reset today
+          </button>
+        )}
+        {resetAll && (
+          <button
+            type="button"
+            onClick={() => {
+              if (confirm('Erase all playtest data (boards, results, collection)?')) void act(resetAll);
+            }}
+          >
+            Reset all
+          </button>
+        )}
         <button type="button" onClick={onReplayTarot}>
           Replay tarot
         </button>

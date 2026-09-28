@@ -1,4 +1,5 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src", "test"]
+  // Sources must stay Deno-compatible: no Node types here.
+  "include": ["src"]
 }
