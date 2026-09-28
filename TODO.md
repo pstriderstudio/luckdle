@@ -112,7 +112,7 @@ Current discussion: work through the games individually. The dice game's core in
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
-| Dice of Destiny | One tap rolls all five dice once, with no rerolls. | Dice faces, combination rules/rankings, result presentation outside the board, and rewards. |
+| Dice of Destiny | One tap rolls all five dice once, with no rerolls. | Agreed; see the Dice of Destiny section. |
 | Mystery Card Pack | Open a larger trading-card-style booster with multiple rarities, an opening animation, and a rare card pulled upward and revealed. | Pack size, slot structure, scoring, rarity distribution, guarantees, variants, duplicates, and collection storage. |
 | Daily Summon | A gacha-style 10-pull of characters from an original fantasy cast. | Agreed; see the Daily Summon section. Character writing and art remain. |
 | Coin Streak | Flip until tails ends the run; measure the number of consecutive heads. | Manual versus automatic flips, outcome probabilities, scoring, and long-streak handling. |
@@ -130,31 +130,31 @@ Current discussion: work through the games individually. The dice game's core in
 - [ ] Define each selected game's rules and outcome probabilities before implementing it.
 - [ ] Make ordinary and unlucky outcomes entertaining through artwork, names, and copy.
 
-### Dice of Destiny — first game under discussion
+### Dice of Destiny — agreed design
 
-Five dice, one tap to roll them all, no rerolls, and combination-based luck are agreed. Rarer recognized combinations are luckier; no combination or minimal combinations represent low luck. Exact categories and other rules below remain open or proposed.
+Five fair six-sided dice, one tap to roll them all, no rerolls, and combination-based luck. Rarer recognized combinations are luckier; no combination is lowest. The design is complete; implementation remains.
 
 - [x] Choose the core format: a single roll of five dice, triggered together by one tap, with no keep/reroll or push-your-luck stage.
 - [x] Choose dice count: five.
-- [ ] Confirm die faces and probabilities. Proposed: standard fair six-sided dice.
+- [x] Die faces: five standard, fair six-sided dice.
 - [x] Judge luck by combinations, with rarer recognized combinations ranked higher. No combination is lowest luck, and minimal combinations are low luck. Do not rank by the sum of dice.
-- [ ] Finalize the recognized combinations and their ranking. Proposed highest to lowest: five of a kind → four of a kind → five-dice straight → full house → three of a kind → two pairs → one pair → no combination.
+- [x] Recognized combinations and ranking, highest to lowest: five of a kind → four of a kind → five-dice straight → full house → three of a kind → two pairs → one pair → no combination.
 - [x] Require all five dice for a straight: 1–2–3–4–5 or 2–3–4–5–6, in any roll order. Four-dice straights do not count.
 - [x] Keep results off the board. Where and how results are shown remains a separate decision.
-- [ ] Decide the result display outside the board. Proposed content: show the dice, name the combination, and show the probability of that exact result category once categories are precisely defined. Presentation remains undecided.
+- [x] Result display (result screen only, never the board): the dice tumble and settle after the tap (quick fades in reduced-motion mode), then show the five dice, the combination name with how often it occurs (e.g. “Full house — about 1 in 26 rolls”), then the luck label and score.
 - [x] Decide interaction: one click/tap rolls all five dice once.
 - [x] Decide attempts: one official roll per day when this game is one of the user's five daily selections, with the result saved and no reroll.
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
-- [x] Use the shared luck labels with dice cut-offs (if the proposed ranking is approved): No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
-- [ ] Decide any rewards separately; collectible rewards are not currently agreed.
-- [ ] Once rules are approved, enumerate outcomes to verify category probabilities and implement roll generation, persistence, and board completion state.
+- [x] Use the shared luck labels with dice cut-offs : No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
+- [x] No rewards: dice is a pure luck test; cards and characters remain the only collectibles.
+- [ ] Implement roll generation, persistence, and board completion state; verify category probabilities by enumeration in tests.
 
-#### Preliminary combination probabilities
+#### Combination probabilities
 
-Enumerated all 7,776 ordered rolls of five independent fair six-sided dice. These results assume only five-dice straights, with exact mutually exclusive categories: a full house does not count as three of a kind, and stronger repeated-value categories do not also count as a pair. Dice faces and the final category set remain to be confirmed.
+Enumerated all 7,776 ordered rolls of five independent fair six-sided dice. These results assume only five-dice straights, with exact mutually exclusive categories: a full house does not count as three of a kind, and stronger repeated-value categories do not also count as a pair.
 
-| Proposed luck rank (highest first) | Category | Outcomes | Probability |
+| Luck rank (highest first) | Category | Outcomes | Probability |
 | --- | --- | --- | --- |
 | 1 | Five of a kind | 6 | 0.0772% |
 | 2 | Four of a kind | 150 | 1.9290% |
@@ -167,7 +167,9 @@ Enumerated all 7,776 ordered rolls of five independent fair six-sided dice. Thes
 
 No combination is deliberately lowest luck even though that category is less common than a pair. Rarity ranks recognized successful combinations, not every possible result category. This preserves the user's intended low luck for no/minimal combinations. Five-dice-only straights are approved; four-dice straights are excluded.
 
-Luck scores under the shared 0–100 method, if the proposed ranking above is approved: No combination 3.1 · One pair 29.3 · Two pairs 64.0 · Three of a kind 83.3 · Full house 93.0 · Five-dice straight 96.5 · Four of a kind 99.0 · Five of a kind 99.96.
+“About 1 in” for display: five of a kind 1,296 · four of a kind 52 · straight 32 · full house 26 · three of a kind 6.5 · two pairs 4.3 · one pair 2.2 · no combination 16.
+
+Luck scores under the shared 0–100 method: No combination 3.1 · One pair 29.3 · Two pairs 64.0 · Three of a kind 83.3 · Full house 93.0 · Five-dice straight 96.5 · Four of a kind 99.0 · Five of a kind 99.96.
 
 ### Mystery Card Pack — next game for discussion
 
@@ -207,7 +209,7 @@ Cut-offs are set per game so every label occurs, as close to 20% each as the gam
 
 | Game | Jinxed | Unlucky | Fair Luck | Lucky | Charmed |
 | --- | --- | --- | --- | --- | --- |
-| Dice of Destiny (proposed ranking) | 6.17% | 46.30% | 23.15% | 15.43% | 8.95% |
+| Dice of Destiny | 6.17% | 46.30% | 23.15% | 15.43% | 8.95% |
 | Mystery Card Pack | 31.69% | 24.38% | 14.51% | 14.95% | 14.48% |
 
 #### Pack outcomes, luck scores and labels
@@ -398,7 +400,8 @@ A daily gacha-style 10-pull from an original fantasy cast, separate in feel from
 | Independent results with equal odds; one global daily reset for everyone at 3:00 AM US Eastern (follows daylight saving) | Agreed |
 | Game boards do not display results | Agreed; result presentation deferred |
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
-| Dice luck is based on combinations: rarer combinations are luckier, no/minimal combinations are low luck | Agreed; exact categories/ranking remain proposed |
+| Dice luck is based on combinations: rarer combinations are luckier, no/minimal combinations are low luck | Agreed |
+| Dice: fair d6; ranking five of a kind → four of a kind → straight → full house → three of a kind → two pairs → one pair → no combination; result shows dice, combination, 1-in-N, label, score; no rewards | Agreed |
 | Straights require all five dice: 1–5 or 2–6 | Agreed; no four-dice straights |
 | Dice outcomes have both a readable luck label and numerical luck score | Agreed |
 | Compare daily luck with other users after completing the day's games | Agreed; scoring and eligibility remain open |
