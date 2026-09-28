@@ -310,7 +310,7 @@ A daily gacha-style 10-pull from an original fantasy cast, separate in feel from
   4. **Duplicates:** already-owned 1★–3★ characters are skipped and tallied; every 4★ and 5★ gets its own spotlight. Within one summon, the first copy of a 1★–3★ character is revealed and later copies are skipped.
   5. **Finish:** a grid of all ten, with already-owned characters marked **Owned** (unlike packs, the grid shows skipped characters again, following gacha convention), then the luck label and score.
 - [ ] Write the 60-character cast (names, titles, bios) and assign tiers.
-- [ ] Confirm the label cut-offs by exact search and build the full outcome/score table in code rather than in this document.
+- [x] Confirm the label cut-offs by exact search and build the full outcome/score table in code rather than in this document. Exact search confirms the preliminary cut-offs (Jinxed 19.1% / Unlucky 18.3% / Fair Luck 20.9% / Lucky 20.8% / Charmed 20.8%); see `packages/game-logic/src/games/dailySummon.ts`.
 
 ### Lucky Fishing — agreed design
 
@@ -441,7 +441,7 @@ Replaces the earlier random-number-pattern idea.
 | 14+ | — | 0 | Jinxed |
 
 - [x] Result: guesses taken versus the simulated average (e.g. “Solved in 5 guesses — the average is 6.8”), label, and score. No collectibles.
-- [ ] Re-run the reference simulation in code during implementation and keep it as test data.
+- [x] Re-run the reference simulation in code during implementation and keep it as test data. The reference player uses higher/lower and revealed digits (not excluded digits); it reproduces the table above exactly (mean 6.82).
 
 ### Garden of Chance — agreed design
 
@@ -488,7 +488,7 @@ Replaces the earlier random-number-pattern idea.
 
 ### Implementation work once board behavior is settled
 
-- [ ] Define a game catalog with stable identifiers, category membership, display names, and placeholder panels.
+- [x] Define a game catalog with stable identifiers, category membership, display names, and placeholder panels (`packages/game-logic/src/catalog.ts`).
 - [ ] Build category-board browsing, game selection, and a personal board showing the five selected games.
 - [ ] Implement board states accessibly (never outcomes, scores, or result previews): category boards tag picked games **Picked**; personal-board panels show **Ready** or **Played**, plus a countdown to the 3 AM reset once all five are played.
 - [ ] Persist daily selections and progress, enforce the five-game selection limit, and apply the agreed reset and swap rules.
@@ -508,7 +508,7 @@ Replaces the earlier random-number-pattern idea.
 - [x] Daily report: daily score, daily label, and percentile (e.g. “Luckier than 82% of players today”), then one row per game with its label and score. Tarot is excluded. Before all five games are played it shows progress (e.g. “3 of 5 played”).
 - [x] Each game's result screen shows its “about 1 in N” rarity from that game's outcome distribution (defined per game above).
 - [ ] Explore a shared daily theme across games.
-- [x] Share card: Wordle-style copyable text with the date, daily score, daily label, and one coloured square per game by label (e.g. `Luckdle · 28 Sep · 78 Lucky 🟪🟩🟨🟩🟥`). No tarot and no game results beyond labels. Exact emoji mapping to be set during implementation.
+- [x] Share card: Wordle-style copyable text with the date, daily score, daily label, and one coloured square per game by label (e.g. `Luckdle · 28 Sep · 78 Lucky 🟪🟩🟨🟩🟥`). No tarot and no game results beyond labels. Emoji mapping: Jinxed 🟥 · Unlucky 🟧 · Fair Luck 🟨 · Lucky 🟩 · Charmed 🟪.
 - [x] Put every game on the shared 0–100 luck score, so each game's score measures the same thing and no game choice raises expected standing.
 - [x] Daily luck score = the average of the five game scores (0–100). Every game's score is a percentile of its own outcomes, so each game has an expected score of 50 and no board raises the expected daily score.
 - [x] Eligibility: a player gets a daily score and comparison once all five games are played. The cohort is everyone who finished all five on the same global game day.
@@ -527,7 +527,7 @@ See [ADR 0001](docs/adr/0001-tech-stack.md).
 - [x] Outcomes are generated only in Supabase Edge Functions with a cryptographically secure RNG and saved in Postgres before any reveal. Clients request actions and receive only revealed information.
 - [x] Player identity: Supabase anonymous user on first visit, linkable to email/Google/Apple. Results in Postgres with a unique (player, game day, game) constraint for one official result per play; row-level security lets players read only their own revealed data and never write results.
 - [x] Game day identifier: the calendar date whose 3:00 AM America/New_York reset starts it, computed on the server. Tarot stays in browser storage as agreed; daily results live in Postgres.
-- [ ] Scaffold the repository: web app, Supabase project (migrations, Edge Functions), and a shared game-logic package with tests (outcome distributions and score tables from this document as test data).
+- [x] Scaffold the repository: web app, Supabase project (migrations, Edge Functions), and a shared game-logic package with tests (outcome distributions and score tables from this document as test data). Rules for all twelve games are implemented in `packages/game-logic`; games are not yet wired to Edge Functions or playable in the web app.
 - [ ] Define loading, error, and recovery behavior for the approved features.
 - [ ] Verify mobile layout, accessibility, daily limits, persistence, and outcome calculations for the initial release.
 

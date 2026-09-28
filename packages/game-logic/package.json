@@ -1,0 +1,10 @@
+{
+  "name": "@luckdle/game-logic",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Luckdle outcome distributions, rankings, scores, and labels. Runs in Deno (Edge Functions), browsers, and Node.",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
