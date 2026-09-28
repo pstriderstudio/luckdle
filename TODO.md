@@ -11,12 +11,12 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 - Game boards do not display results. Decide how results are presented separately; do not assume score or outcome previews on game panels.
 - Provide a collection section showing the cards and gacha characters the user has pulled.
 - Score every game on one shared 0–100 luck scale: the percentage of that game's possible results ranked below yours, plus half of those that tie with it. Equal results get equal scores; no hidden tie-breakers.
-- Pair every game's luck score with one of five plain-language game luck labels, each covering an equal 20-point band: 0–19.99 **Jinxed**, 20–39.99 **Unlucky**, 40–59.99 **Even Odds**, 60–79.99 **Lucky**, 80–100 **Charmed**. Game labels use different words from the tarot outlook levels to keep tarot separate. The bands are agreed; the wording is a draft.
+- Pair every game's luck score with one of five plain-language luck labels, worst to best: **Jinxed**, **Unlucky**, **Fair Luck**, **Lucky**, **Charmed**. Each game sets its own cut-offs over its ranked results so that every label occurs, choosing the cut points that bring the label frequencies as close to 20% each as the game's outcomes allow. Equal results always share a label, so a label covers a different score range in each game. The tarot outlook uses the same five words.
 - Give dice outcomes both a plain-language luck label and a numerical luck score. After users finish their games for the day, compare their daily luck with other users. The scoring scale, aggregation, and comparison presentation remain to be designed.
 - Greet first-time visitors on the home page with a tarot fortune before they enter the other games.
 - Tarot is a skippable, one-time introduction for first-time visitors. It cannot be revisited or requested again after completion or skipping.
 - Start with fully authored reading content, assembled from authored interpretations and connecting passages. AI-composed readings are outside the initial scope.
-- Use five outlook levels: **Bad luck**, **Minor bad luck**, **Neutral**, **Minor good luck**, and **Good luck**. The repeated word in “minor good luck luck” is treated as a typo.
+- Use five outlook levels, shared with the games: **Jinxed**, **Unlucky**, **Fair Luck**, **Lucky**, and **Charmed**. Tarot shares only the words; it stays separate from game odds, rewards, scores, and reports.
 - Keep tarot separate from the games: it does not change game odds, rewards, or scores, and does not appear in daily game reports.
 - Present a broader welcome to the site through text only, with no narration. Visitors proceed at their own pace; no target duration or timed progression.
 - Make tarot feel like a real reading, with more substance than a straightforward card pick.
@@ -43,7 +43,7 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 - [x] Include all 78 cards in the selection grid.
 - [x] Use one continuous scrollable grid on mobile, with readable, tappable cards.
 - [x] Connect card meanings through theme tags and authored relationship passages responding to all three spread positions.
-- [x] Define the five outlook labels: Bad luck, Minor bad luck, Neutral, Minor good luck, Good luck.
+- [x] Define the five outlook labels: Jinxed, Unlucky, Fair Luck, Lucky, Charmed, shared with the games. This replaces the earlier Bad luck / Minor bad luck / Neutral / Minor good luck / Good luck wording.
 - [x] Determine the outlook using values specific to card, orientation, and position, weighted toward atmosphere and obstacle with a smaller contribution from guidance. Exact values, weights, and thresholds remain implementation work. This mapping is an original product rule, not a standard tarot score.
 - [x] Let the deck and interpretation rules determine outlook frequency; inspect the resulting distribution without targeting fixed percentages.
 - [x] Keep the fortune separate from games, with no effect on their odds, rewards, or scores.
@@ -65,7 +65,7 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 - [ ] Define relationship rules and author connecting passages so guidance responds to the atmosphere and obstacle.
 - [ ] Review representative spreads, including mixed themes, reversed cards, and challenging guidance cards, for coherent meaning and natural prose.
 - [ ] Specify card selection, randomization, duplicate prevention, and the relationship between player gestures and the final draw.
-- [ ] Author card/orientation/position values, choose numerical weights and five-level thresholds, and inspect the resulting outlook distribution. Use the same interpretations for scoring and prose; do not force preset outcome frequencies.
+- [ ] Author card/orientation/position values, choose numerical weights and five-level thresholds so every label is reachable, and inspect the resulting outlook distribution. Use the same interpretations for scoring and prose; do not force preset outcome frequencies.
 - [ ] Implement browser persistence for shuffle progress, deck order/orientations, selections, revealed cards, reading progress, and completed/skipped status so an interruption cannot redraw the spread. Completion or skipping routes future visits directly to the games; no history/replay route or daily reset. Discard temporary reading data after completion or skipping while retaining the dismissal status.
 - [ ] Keep authored content separate from reading assembly so the library and composition approach can be expanded later.
 - [ ] Design the welcome, deck interactions, card reveals, combined reading, and transition into games.
@@ -146,7 +146,7 @@ Five dice, one tap to roll them all, no rerolls, and combination-based luck are 
 - [ ] Decide attempts. Proposed: one official roll when this game is one of the user's five daily selections, with the result saved and no reroll.
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
-- [x] Use the shared game luck labels (see Agreed direction). With the proposed ranking: No combination → Jinxed; One pair → Unlucky; Two pairs → Lucky; Three of a kind or better → Charmed.
+- [x] Use the shared luck labels with dice cut-offs (if the proposed ranking is approved): No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
 - [ ] Decide any rewards separately; collectible rewards are not currently agreed.
 - [ ] Once rules are approved, enumerate outcomes to verify category probabilities and implement roll generation, persistence, and board completion state.
 
@@ -171,7 +171,7 @@ Luck scores under the shared 0–100 method, if the proposed ranking above is ap
 
 ### Mystery Card Pack — next game for discussion
 
-Agreed direction: a 12-card pack inspired by Yu-Gi-Oh!/Magic-style boosters with multiple rarities, a pack-opening animation, and a rare card pulled upward and revealed. Each pack contains 6 Common slots, 3 Uncommon slots, 2 wildcard slots of any rarity, and 1 guaranteed Rare-or-better slot, with approved independent slot odds below. A podium spotlights the three rarest cards from the current pack and those three determine its luck result. Podium ordering and the luck score are agreed (below); label thresholds remain open. Artwork is still deferred.
+Agreed direction: a 12-card pack inspired by Yu-Gi-Oh!/Magic-style boosters with multiple rarities, a pack-opening animation, and a rare card pulled upward and revealed. Each pack contains 6 Common slots, 3 Uncommon slots, 2 wildcard slots of any rarity, and 1 guaranteed Rare-or-better slot, with approved independent slot odds below. A podium spotlights the three rarest cards from the current pack and those three determine its luck result. Pack ordering, the luck score, and labels are agreed (below). Artwork is still deferred.
 
 - [x] Replace the five-card proposal with a 12-card trading-card-style booster.
 - [x] Include multiple rarity tiers, a pack-opening animation, and a rare-card pull-up/reveal animation.
@@ -179,7 +179,7 @@ Agreed direction: a 12-card pack inspired by Yu-Gi-Oh!/Magic-style boosters with
 - [x] Guarantee one Rare-or-better card in every pack. Additional Rare-or-better cards are possible through chance, not guaranteed; the other podium places may be lower rarity.
 - [x] Define pack slots: 6 Common + 3 Uncommon + 2 wildcards that can yield any rarity + 1 guaranteed Rare-or-better. This is Luckdle's agreed format, not the distribution of a specific real-world product.
 - [x] Show a podium of the three rarest cards pulled from the current pack and base the pack's luck result on those three. This is a result presentation outside the game-selection boards.
-- [x] Define how the top three combine into the numerical luck score: rank by rarity only, so duplicate copies count like any other card of that rarity, equal rarity triplets tie, and when fewer than three cards are Rare-or-better the fixed Uncommons fill the podium. Commons can never reach the podium.
+- [x] Define how the top three combine into the numerical luck score: rank by rarity only, so duplicate copies count like any other card of that rarity, packs with the same podium are separated by the rest of the pack (see the ordering below), and when fewer than three cards are Rare-or-better the fixed Uncommons fill the podium. Commons can never reach the podium.
 - [x] Skip duplicate cards below Rare in the reveal experience, so as the collection fills the reveal increasingly focuses on Rare-or-better pulls. Rare-or-better duplicates are not skipped by this rule.
 - [x] Count already-owned cards below Rare among the 12, keep the actual pack contents, and skip only their individual reveal. Do not replace or reroll them; ownership affects presentation, not pack contents or odds.
 - [x] Finalize the rarity ladder: Common → Uncommon → Rare → Super Rare → Ultra Rare → Secret Rare.
@@ -197,67 +197,85 @@ Agreed direction: a 12-card pack inspired by Yu-Gi-Oh!/Magic-style boosters with
 
 Under the approved odds, each wildcard has a 10% chance of Rare-or-better, so a pack contains exactly one/two/three Rare-or-better cards with probabilities 81%/18%/1%. At least one Secret Rare appears in 1 − (0.999² × 0.995) = 0.6989005% of packs (about 1 in 143). These are long-run probabilities, not guaranteed pull intervals.
 
-- [x] Choose podium scoring priority: compare the highest rarity first, then the second-highest, then the third-highest. One Secret Rare outranks any pack without one; supporting pulls distinguish packs that share the same highest tier. Additive rarity points were rejected.
-- [x] Derive the numerical luck score from the complete distribution of podium outcomes under the approved slot odds (table below). Equal rarity triplets tie; no hidden tie-breakers.
-- [x] Use the shared game luck labels: R / U / U → Unlucky; R / R / U, R / R / R and SR / U / U → Lucky; every other podium → Charmed. Packs cannot be Jinxed because every pack contains a Rare.
+- [x] Choose pack scoring priority: compare the highest rarity first, then the second-highest, then the third-highest (the podium). Packs with the same podium are then compared on the rest of the pack in the same way, highest rarity first. Only the guaranteed slot and two wildcards vary, so in practice a wildcard Uncommon beats a wildcard Common. Packs tie only when all 12 rarities match. Additive rarity points were rejected.
+- [x] Derive the numerical luck score from the complete distribution of pack outcomes under the approved slot odds (table below). No hidden tie-breakers beyond the ordering above.
+- [x] Use the shared luck labels with pack cut-offs as listed in the table. Frequencies: Jinxed 31.69% / Unlucky 24.38% / Fair Luck 14.51% / Lucky 14.95% / Charmed 14.48%.
 
-#### How often each game luck label occurs
+#### How often each luck label occurs
 
-The score is a percentile, but these games have a few results that each cover a large share of outcomes, so labels do not appear 20% of the time each, and some never appear. The five-game daily score will be smoother, so every label can occur there.
+Cut-offs are set per game so every label occurs, as close to 20% each as the game's outcomes allow. A few results cover large shares of outcomes, so frequencies are uneven.
 
-| Game | Jinxed | Unlucky | Even Odds | Lucky | Charmed |
+| Game | Jinxed | Unlucky | Fair Luck | Lucky | Charmed |
 | --- | --- | --- | --- | --- | --- |
-| Dice of Destiny (proposed ranking) | 6.17% | 46.30% | never | 23.15% | 24.38% |
-| Mystery Card Pack | never | 60.75% | never | 26.02% | 13.23% |
+| Dice of Destiny (proposed ranking) | 6.17% | 46.30% | 23.15% | 15.43% | 8.95% |
+| Mystery Card Pack | 31.69% | 24.38% | 14.51% | 14.95% | 14.48% |
 
-#### Podium outcomes and luck scores
+#### Pack outcomes, luck scores and labels
 
-Exact distribution of all 34 podium outcomes under the approved slot odds, best first. Score = the shared 0–100 luck score. Abbreviations: U Uncommon, R Rare, SR Super Rare, UR Ultra Rare, ScR Secret Rare.
+Exact distribution of all 52 distinct pack outcomes under the approved slot odds, best first. The fixed 6 Common and 3 Uncommon slots are the same in every pack, so an outcome is the sorted rarities of the guaranteed slot and two wildcards. Score = the shared 0–100 luck score. Abbreviations: C Common, U Uncommon, R Rare, SR Super Rare, UR Ultra Rare, ScR Secret Rare.
 
-| Podium | Probability | About 1 in | Score |
-| --- | --- | --- | --- |
-| ScR / ScR / ScR | 0.0000005% | 200,000,000 | 100.00 |
-| ScR / ScR / UR | 0.0000135% | 7,407,407 | 100.00 |
-| ScR / ScR / SR | 0.00004% | 2,500,000 | 100.00 |
-| ScR / ScR / R | 0.000145% | 689,655 | 100.00 |
-| ScR / ScR / U | 0.0009% | 111,111 | 100.00 |
-| ScR / UR / UR | 0.0001215% | 823,045 | 100.00 |
-| ScR / UR / SR | 0.00072% | 138,889 | 100.00 |
-| ScR / UR / R | 0.00261% | 38,314 | 100.00 |
-| ScR / UR / U | 0.0162% | 6,173 | 99.99 |
-| ScR / SR / SR | 0.001% | 100,000 | 99.98 |
-| ScR / SR / R | 0.0072% | 13,889 | 99.97 |
-| ScR / SR / U | 0.054% | 1,852 | 99.94 |
-| ScR / R / R | 0.01295% | 7,722 | 99.91 |
-| ScR / R / U | 0.198% | 505 | 99.81 |
-| ScR / U / U | 0.405% | 247 | 99.50 |
-| UR / UR / UR | 0.0003645% | 274,348 | 99.30 |
-| UR / UR / SR | 0.00324% | 30,864 | 99.30 |
-| UR / UR / R | 0.011745% | 8,514 | 99.29 |
-| UR / UR / U | 0.0729% | 1,372 | 99.25 |
-| UR / SR / SR | 0.009% | 11,111 | 99.21 |
-| UR / SR / R | 0.0648% | 1,543 | 99.17 |
-| UR / SR / U | 0.486% | 206 | 98.90 |
-| UR / R / R | 0.11655% | 858 | 98.59 |
-| UR / R / U | 1.782% | 56 | 97.65 |
-| UR / U / U | 3.645% | 27 | 94.93 |
-| SR / SR / SR | 0.008% | 12,500 | 93.11 |
-| SR / SR / R | 0.086% | 1,163 | 93.06 |
-| SR / SR / U | 0.72% | 139 | 92.66 |
-| SR / R / R | 0.308% | 325 | 92.14 |
-| SR / R / U | 5.22% | 19 | 89.38 |
-| SR / U / U | 16.2% | 6 | 78.67 |
-| R / R / R | 0.3675% | 272 | 70.38 |
-| R / R / U | 9.45% | 11 | 65.47 |
-| R / U / U | 60.75% | 2 | 30.38 |
+| Guaranteed slot + wildcards | Podium | Probability | About 1 in | Score | Label |
+| --- | --- | --- | --- | --- | --- |
+| ScR / ScR / ScR | ScR / ScR / ScR | 0.0000005% | 200,000,000 | 100.00 | Charmed |
+| ScR / ScR / UR | ScR / ScR / UR | 0.0000135% | 7,407,407 | 100.00 | Charmed |
+| ScR / ScR / SR | ScR / ScR / SR | 0.00004% | 2,500,000 | 100.00 | Charmed |
+| ScR / ScR / R | ScR / ScR / R | 0.000145% | 689,655 | 100.00 | Charmed |
+| ScR / ScR / U | ScR / ScR / U | 0.00025% | 400,000 | 100.00 | Charmed |
+| ScR / ScR / C | ScR / ScR / U | 0.00065% | 153,846 | 100.00 | Charmed |
+| ScR / UR / UR | ScR / UR / UR | 0.0001215% | 823,045 | 100.00 | Charmed |
+| ScR / UR / SR | ScR / UR / SR | 0.00072% | 138,889 | 100.00 | Charmed |
+| ScR / UR / R | ScR / UR / R | 0.00261% | 38,314 | 100.00 | Charmed |
+| ScR / UR / U | ScR / UR / U | 0.0045% | 22,222 | 99.99 | Charmed |
+| ScR / UR / C | ScR / UR / U | 0.0117% | 8,547 | 99.99 | Charmed |
+| ScR / SR / SR | ScR / SR / SR | 0.001% | 100,000 | 99.98 | Charmed |
+| ScR / SR / R | ScR / SR / R | 0.0072% | 13,889 | 99.97 | Charmed |
+| ScR / SR / U | ScR / SR / U | 0.015% | 6,667 | 99.96 | Charmed |
+| ScR / SR / C | ScR / SR / U | 0.039% | 2,564 | 99.94 | Charmed |
+| ScR / R / R | ScR / R / R | 0.01295% | 7,722 | 99.91 | Charmed |
+| ScR / R / U | ScR / R / U | 0.055% | 1,818 | 99.88 | Charmed |
+| ScR / R / C | ScR / R / U | 0.143% | 699 | 99.78 | Charmed |
+| ScR / U / U | ScR / U / U | 0.03125% | 3,200 | 99.69 | Charmed |
+| ScR / U / C | ScR / U / U | 0.1625% | 615 | 99.59 | Charmed |
+| ScR / C / C | ScR / U / U | 0.21125% | 473 | 99.41 | Charmed |
+| UR / UR / UR | UR / UR / UR | 0.0003645% | 274,348 | 99.30 | Charmed |
+| UR / UR / SR | UR / UR / SR | 0.00324% | 30,864 | 99.30 | Charmed |
+| UR / UR / R | UR / UR / R | 0.011745% | 8,514 | 99.29 | Charmed |
+| UR / UR / U | UR / UR / U | 0.02025% | 4,938 | 99.28 | Charmed |
+| UR / UR / C | UR / UR / U | 0.05265% | 1,899 | 99.24 | Charmed |
+| UR / SR / SR | UR / SR / SR | 0.009% | 11,111 | 99.21 | Charmed |
+| UR / SR / R | UR / SR / R | 0.0648% | 1,543 | 99.17 | Charmed |
+| UR / SR / U | UR / SR / U | 0.135% | 741 | 99.07 | Charmed |
+| UR / SR / C | UR / SR / U | 0.351% | 285 | 98.83 | Charmed |
+| UR / R / R | UR / R / R | 0.11655% | 858 | 98.59 | Charmed |
+| UR / R / U | UR / R / U | 0.495% | 202 | 98.29 | Charmed |
+| UR / R / C | UR / R / U | 1.287% | 78 | 97.40 | Charmed |
+| UR / U / U | UR / U / U | 0.28125% | 356 | 96.61 | Charmed |
+| UR / U / C | UR / U / U | 1.4625% | 68 | 95.74 | Charmed |
+| UR / C / C | UR / U / U | 1.90125% | 53 | 94.06 | Charmed |
+| SR / SR / SR | SR / SR / SR | 0.008% | 12,500 | 93.11 | Charmed |
+| SR / SR / R | SR / SR / R | 0.086% | 1,163 | 93.06 | Charmed |
+| SR / SR / U | SR / SR / U | 0.2% | 500 | 92.92 | Charmed |
+| SR / SR / C | SR / SR / U | 0.52% | 192 | 92.56 | Charmed |
+| SR / R / R | SR / R / R | 0.308% | 325 | 92.14 | Charmed |
+| SR / R / U | SR / R / U | 1.45% | 69 | 91.26 | Charmed |
+| SR / R / C | SR / R / U | 3.77% | 27 | 88.65 | Charmed |
+| SR / U / U | SR / U / U | 1.25% | 80 | 86.14 | Charmed |
+| SR / U / C | SR / U / U | 6.5% | 15 | 82.27 | Lucky |
+| SR / C / C | SR / U / U | 8.45% | 12 | 74.79 | Lucky |
+| R / R / R | R / R / R | 0.3675% | 272 | 70.38 | Fair Luck |
+| R / R / U | R / R / U | 2.625% | 38 | 68.89 | Fair Luck |
+| R / R / C | R / R / U | 6.825% | 15 | 64.16 | Fair Luck |
+| R / U / U | R / U / U | 4.6875% | 21 | 58.41 | Fair Luck |
+| R / U / C | R / U / U | 24.375% | 4 | 43.88 | Unlucky |
+| R / C / C | R / U / U | 31.6875% | 3 | 15.84 | Jinxed |
 
-The most common pack (R / U / U, 60.75%) scores about 30: a typical result sits below the middle because most results are ordinary. Scores near 100 are distinguished by the 1-in-N rarity rather than the rounded score.
+The most common pack (R / C / C, 31.69%) is Jinxed with a score of 15.84. Scores near 100 are distinguished by the 1-in-N rarity rather than the rounded score.
 
 - [ ] Define the opening interaction and reveal sequence. Proposed: open wrapper → reveal a stack → show new lower-rarity cards while skipping already-owned lower-rarity cards according to the agreed duplicate rule → spotlight Rare-or-better pulls → show the top-three podium and result. Preserve spotlight moments for additional rare pulls, and do not reintroduce skipped duplicate reveals at the end.
 - [ ] Build the reveal using placeholder cards; retain an accessible reduced-motion path. Pack contents should be fixed before reveals so animation timing does not change the outcome.
 - [x] Make pulled cards persistent collectibles visible in the site's collection section alongside gacha characters.
 - [ ] Define collection storage, duplicate counts, same-pack duplicate handling, and whether special variants exist. Defer artwork direction until the games are finished.
-- [ ] Define daily attempts, label/score mapping, and result persistence once the format is approved.
+- [ ] Define daily attempts and result persistence.
 
 Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/en/products/suda/) as a nine-card booster; Wizards' [Play Booster introduction](https://magic.wizards.com/en/news/making-magic/what-are-play-boosters) describes fourteen-card packs. Real products vary, so use these as structural inspiration rather than assuming one universal pack format.
 
@@ -344,7 +362,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
 | Dice luck is based on combinations: rarer combinations are luckier, no/minimal combinations are low luck | Agreed; exact categories/ranking remain proposed |
 | Straights require all five dice: 1–5 or 2–6 | Agreed; no four-dice straights |
-| Dice outcomes have both a readable luck label and numerical luck score | Agreed; exact labels and scale remain open |
+| Dice outcomes have both a readable luck label and numerical luck score | Agreed |
 | Compare daily luck with other users after completing the day's games | Agreed; scoring and eligibility remain open |
 | Daily comparison includes both a personal percentile and a leaderboard | Agreed; detailed presentation and ranking rules remain open |
 | 12-card packs with trading-card-style rarities and pack-opening/rare-card pull-up animations | Agreed |
@@ -355,9 +373,9 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Collection section for pulled cards and gacha characters | Agreed; persistence and display details remain open |
 | Already-owned cards below Rare count among the 12 but skip their individual reveal, with no replacement | Agreed; pack odds remain unchanged |
 | Top-three rarest cards from the current pack form a podium and determine pack luck | Agreed |
-| Podium ranked by highest rarity first, then second, then third; equal rarity triplets tie | Agreed |
+| Packs ranked by highest rarity first: podium, then the rest of the pack; ties only when all 12 rarities match | Agreed |
 | Shared 0–100 luck score for every game: % of results ranked below yours, plus half of ties | Agreed |
-| Five game luck labels in equal 20-point bands, worded differently from tarot | Agreed; draft wording Jinxed / Unlucky / Even Odds / Lucky / Charmed |
+| Shared luck labels Jinxed / Unlucky / Fair Luck / Lucky / Charmed, with per-game cut-offs so every label occurs | Agreed |
 | Supplied game-menu image as a board-layout reference | Recorded; art direction remains deferred |
 | First-time home-page tarot greeting with five fortune levels | Agreed |
 | Tarot should feel like a reading rather than a simple card pick | Agreed |
@@ -373,6 +391,6 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Browser-only first-visit tracking and resuming interrupted readings | Agreed |
 | Skippable one-time introduction for first-time visitors, with no revisit or new-reading option | Agreed |
 | Broader welcome, text only, self-paced | Agreed |
-| Bad luck / Minor bad luck / Neutral / Minor good luck / Good luck | Agreed |
+| Tarot outlook uses the shared labels Jinxed / Unlucky / Fair Luck / Lucky / Charmed | Agreed; replaces Bad luck / Minor bad luck / Neutral / Minor good luck / Good luck |
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | Launch with tarot, dice, card packs, and fishing | Proposed |
