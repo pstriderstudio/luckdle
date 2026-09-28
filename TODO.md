@@ -478,11 +478,11 @@ Replaces the earlier random-number-pattern idea.
 ### Decisions to revisit after selecting the game list
 
 - [x] Board categories (names are placeholders): **The Arena** (competitive) — Lucky Number, Coin Streak, Dice of Destiny; **The Vault** — Mystery Card Pack, Daily Summon, Three Chests; **The Wilds** — Lucky Fishing, Gem Breaker, Garden of Chance; **The Night Sky** — Falling Star, Cosmic Alignment, The Wishing Well. If Cosmic Alignment is cut, The Night Sky keeps two games.
-- [ ] Decide how users move between category boards and their personal board.
+- [x] Navigation: the personal board is home, showing five panels with “+” empty slots until filled. The four category boards sit alongside as swipeable/clickable tabs; tapping a game on a category board adds it to the next empty slot. After tarot, first-time visitors land on the category boards with an empty personal board.
 - [x] Players build their board as they go; they don't need to pick all five before playing.
 - [x] Unplayed selections can be swapped any time that day. A game locks the moment its result is generated (tapping Roll, tearing open the pack).
-- [ ] Decide whether yesterday's board carries forward or users choose a fresh board each day.
-- [ ] Define what “make their own board” allows beyond choosing games: automatic arrangement, rearrangeable panels, or more customization.
+- [x] Yesterday's five picks carry over as today's board, unplayed and swappable until played. A **Clear board** button starts fresh.
+- [x] “Make their own board” = choosing the five games plus drag-to-rearrange panels; otherwise the layout is automatic in the reference style. No further customization for now.
 - [x] Store the personal board's daily selections and progress on the server under the same anonymous player as collections and results; no account needed.
 - [ ] Define any paid-user offering later; no paid features, pricing, or expanded limits have been specified.
 
@@ -490,7 +490,7 @@ Replaces the earlier random-number-pattern idea.
 
 - [ ] Define a game catalog with stable identifiers, category membership, display names, and placeholder panels.
 - [ ] Build category-board browsing, game selection, and a personal board showing the five selected games.
-- [ ] Decide whether boards show availability/selection/completion indicators, then implement the approved states accessibly. Do not display outcomes, scores, or result previews on the boards.
+- [ ] Implement board states accessibly (never outcomes, scores, or result previews): category boards tag picked games **Picked**; personal-board panels show **Ready** or **Played**, plus a countdown to the 3 AM reset once all five are played.
 - [ ] Persist daily selections and progress, enforce the five-game selection limit, and apply the agreed reset and swap rules.
 - [ ] Make board navigation and selection usable on mobile and with a keyboard.
 - [ ] Route completed/skipped tarot introductions into the board experience without counting tarot toward the five daily game choices.
@@ -539,6 +539,7 @@ Replaces the earlier random-number-pattern idea.
 | One official attempt per chosen game per day; no practice plays; unplayed picks swappable until played; no redo after leaving | Agreed |
 | Independent results with equal odds; one global daily reset for everyone at 3:00 AM US Eastern (follows daylight saving) | Agreed |
 | Game boards do not display results | Agreed; result presentation deferred |
+| Personal board is home with category boards as tabs; yesterday's picks carry over; drag-to-rearrange; Picked / Ready / Played states | Agreed |
 | Four boards of three: Arena (Lucky Number, Coin Streak, Dice), Vault (Card Pack, Summon, Chests), Wilds (Fishing, Gems, Garden), Night Sky (Falling Star, Cosmic Alignment, Wishing Well) | Agreed; names are placeholders |
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
 | Dice luck is based on combinations: rarer combinations are luckier, no/minimal combinations are low luck | Agreed |
