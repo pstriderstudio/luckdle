@@ -281,6 +281,7 @@ The most common pack (R / C / C, 31.69%) is Jinxed with a score of 15.84. Scores
   - **Reduced motion:** the same order and steps, with quick fades instead of tearing, rising, and flipping.
 - [ ] Build the reveal using placeholder cards; retain an accessible reduced-motion path. Pack contents should be fixed before reveals so animation timing does not change the outcome.
 - [x] Make pulled cards persistent collectibles visible in the site's collection section alongside gacha characters.
+- [x] Card list size: 150 cards — 60 Common, 40 Uncommon, 25 Rare, 15 Super Rare, 7 Ultra Rare, 3 Secret Rare. Within a rolled rarity, each card of that rarity is equally likely (unless a later rule changes this). Simulated collection pace for a player opening one pack every day (typical player / unluckiest 10%): all Commons and Uncommons ~47 / 68 packs, all Rares ~100 / 153, all Super Rares ~199 / 314, full set ~669 / 1,408. Secret Rares set the pace of completion.
 - [x] Define collection storage: server-side, owned or not owned per card with no copy counts, so duplicates (including same-pack duplicates) add nothing. No special variants (foil, alternate art) at launch. Defer artwork direction until the games are finished.
 - [x] Define daily attempts: one pack per day when this game is one of the user's five daily selections. The pack is saved before the reveal (see the opening sequence).
 
@@ -386,6 +387,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Collection section for pulled cards and gacha characters | Agreed |
 | Server-side storage under an anonymous player; optional sign-in for cross-device sync and leaderboard name | Agreed |
 | Collection tracks ownership only (no copy counts), shows undiscovered silhouettes and progress, no card variants at launch | Agreed |
+| Card list: 150 cards (60 C / 40 U / 25 R / 15 SR / 7 UR / 3 ScR), equal chance within a rarity | Agreed |
 | Already-owned cards below Rare count among the 12 but skip their individual reveal, with no replacement | Agreed; pack odds remain unchanged |
 | Top-three rarest cards from the current pack form a podium and determine pack luck | Agreed |
 | Packs ranked by highest rarity first: podium, then the rest of the pack; ties only when all 12 rarities match | Agreed |
