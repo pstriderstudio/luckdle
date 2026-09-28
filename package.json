@@ -15,7 +15,8 @@
     "functions:sync": "node scripts/sync-functions.mjs",
     "supabase:start": "supabase start",
     "supabase:functions": "npm run functions:sync && supabase functions serve --env-file supabase/functions.dev.env",
-    "supabase:deploy": "npm run functions:sync && supabase functions deploy game"
+    "supabase:deploy": "npm run functions:sync && supabase functions deploy game",
+    "calibrate": "node --experimental-strip-types packages/game-logic/scripts/calibrate.ts"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

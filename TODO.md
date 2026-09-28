@@ -520,7 +520,8 @@ Replaces the earlier random-number-pattern idea.
 - [x] Daily label: the same five labels by today's percentile rank — top 20% Charmed, then Lucky, Fair Luck, Unlucky, bottom 20% Jinxed.
 - [x] Leaderboard: top 100 daily scores for the game day, **signed-in players only** (signing in provides the display name and blocks throwaway anonymous retries). Anonymous players still get their percentile. Equal scores share a place; no hidden tie-breakers.
 - [x] Show both a personal percentile and a leaderboard after the user completes their games for the day (rules above; exact layout during design).
-- [ ] Verify calibration by simulation: every game's expected score is 50, but games differ in spread (lumpy games like dice vary more), so check how often different boards reach the top of the leaderboard, and account for Lucky Number's skill element. Revisit for any later paid-user game counts.
+- [x] Verify calibration by simulation: board choice is fair (all 462 boards within about ±10% of the field even for the top 0.1%); see [the calibration report](docs/analysis/2026-09-28-calibration.md) and `npm run calibrate`.
+- [ ] Decide Lucky Number scoring: skill moves its expected score from about 31 (casual) to 60 (expert), so for typical players choosing it lowers expected standing. Options in the calibration report; recommended: score against real players' recent results.
 - [x] Build the simulated field used when fewer than 20 players have finished.
 
 ## 5. Technical foundation
