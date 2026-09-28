@@ -27,11 +27,11 @@ Needs [Docker Desktop](https://www.docker.com/products/docker-desktop/) and the 
 ```sh
 npm run supabase:start       # Postgres, Auth, and the Edge Runtime in Docker; applies supabase/migrations
 npm run supabase:functions   # syncs the game engine and serves the `game` function (leave running)
-cp apps/web/.env.example apps/web/.env.local   # paste the anon key from `supabase status`
+cp apps/web/.env.example apps/web/.env.local   # paste the Publishable key (sb_publishable_…) from `supabase status`
 npm run dev
 ```
 
-With `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` set, the web app signs players in anonymously and every action goes through the `game` Edge Function; without them it falls back to the browser playtest. In local development the dev-tools bar offers **Next day** (the function only honours it when `LUCKDLE_ALLOW_DAY_OFFSET=true`, set in `supabase/functions.dev.env`).
+The web app reaches Supabase through the Vite dev proxy (`/supabase` → `http://127.0.0.1:54321`), so it also works from a phone on the same network. Never use the Secret key in the web app. With `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` set, the web app signs players in anonymously and every action goes through the `game` Edge Function; without them it falls back to the browser playtest. In local development the dev-tools bar offers **Next day** (the function only honours it when `LUCKDLE_ALLOW_DAY_OFFSET=true`, set in `supabase/functions.dev.env`).
 
 ## Playtest mode
 

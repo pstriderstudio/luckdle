@@ -18,7 +18,11 @@ export function StoreProvider({ service, children }: { service: GameService; chi
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    setSnapshot(await service.snapshot());
+    try {
+      setSnapshot(await service.snapshot());
+    } catch (e) {
+      setError((e as Error).message);
+    }
   }, [service]);
 
   useEffect(() => {

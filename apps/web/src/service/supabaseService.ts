@@ -20,7 +20,7 @@ function readOffset(): number {
 export class SupabaseGameService implements GameService {
   readonly kind = 'server' as const;
   private readonly supabase: SupabaseClient;
-  private readonly ready: Promise<void>;
+  private ready: Promise<void> | null = null;
   private readonly devTools: boolean;
   /** Snapshot returned by the latest request, served to the next snapshot() call. */
   private fresh: Snapshot | null = null;
@@ -28,7 +28,6 @@ export class SupabaseGameService implements GameService {
   constructor(url: string, anonKey: string, devTools = false) {
     this.supabase = createClient(url, anonKey);
     this.devTools = devTools;
-    this.ready = this.signIn();
     if (devTools) {
       this.playtest = {
         nextDay: async () => {
@@ -48,10 +47,15 @@ export class SupabaseGameService implements GameService {
     const { data } = await this.supabase.auth.getSession();
     if (data.session) return;
     const { error } = await this.supabase.auth.signInAnonymously();
-    if (error) throw new Error(`Could not start a player session: ${error.message}`);
+    if (error) throw new Error('Could not reach the game server. Please check your connection and try again.');
   }
 
   private async call(request: ServiceRequest): Promise<ServiceResponse> {
+    // Sign in once; if it fails (e.g. the server is down), try again on the next request.
+    this.ready ??= this.signIn().catch((e) => {
+      this.ready = null;
+      throw e;
+    });
     await this.ready;
     const headers: Record<string, string> = {};
     if (this.devTools && readOffset() > 0) headers['x-luckdle-day-offset'] = String(readOffset());

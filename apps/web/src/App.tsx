@@ -11,7 +11,11 @@ import { resetTarot, Tarot, tarotPending } from './tarot/Tarot.tsx';
 
 export function App() {
   const route = useRoute();
-  const { snapshot, error, clearError } = useStore();
+  const { snapshot, error, clearError, refresh } = useStore();
+  const retry = async () => {
+    clearError();
+    await refresh();
+  };
   const [showTarot, setShowTarot] = useState(tarotPending);
   // Bumped by playtest controls so screens remount with fresh state.
   const [epoch, setEpoch] = useState(0);
@@ -28,7 +32,18 @@ export function App() {
     );
   }
 
-  if (!snapshot) return <p className="loading">Loading…</p>;
+  if (!snapshot) {
+    return error ? (
+      <div className="loading" role="alert">
+        <p>{error}</p>
+        <button type="button" className="primary" onClick={() => void retry()}>
+          Try again
+        </button>
+      </div>
+    ) : (
+      <p className="loading">Loading…</p>
+    );
+  }
   const played = snapshot.board.filter((s) => snapshot.sessions[s.game]?.completed).length;
 
   return (
