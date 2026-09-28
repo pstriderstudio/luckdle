@@ -108,7 +108,7 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, and Three Chests. The remaining candidates are undesigned ideas.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, and The Wishing Well. The remaining candidates are undesigned ideas.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -119,7 +119,7 @@ Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing
 | Falling Star | Make a wish: a star falls from the sky, bounces through pegs, and lands in a funnel of slots where the narrow centre is rarest. | Agreed; see the Falling Star section. |
 | Three Chests | Pick one of three chests, then see what the other two held. | Agreed; see the Three Chests section. |
 | Lucky Fishing | Make one cast and reveal a catch with a species, size, and unusual trait. | Agreed; see the Lucky Fishing section. Species writing and art remain. |
-| The Wishing Well | Toss a coin into a well and receive a whimsical object. | Item pool, rarity, tone, reveal interaction, and whether objects persist. |
+| The Wishing Well | Make a wish, toss a coin, and receive a whimsical object themed to your wish. | Agreed; see the Wishing Well section. Object writing remains. |
 | Gem Breaker | Crack a geode to reveal a mineral with size and purity attributes. | Mineral pool, attribute distributions, cracking interaction, and collection display. |
 | Cosmic Alignment | Reveal the alignment of three spinning celestial rings. | Random-stop interaction, alignment measurement, outcome tiers, and animation. |
 | Lucky Number | Generate a number and discover rare patterns such as repeated digits or palindromes. | Number range, pattern definitions, overlapping patterns, and rarity calculation. |
@@ -145,7 +145,7 @@ Five fair six-sided dice, one tap to roll them all, no rerolls, and combination-
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
 - [x] Use the shared luck labels with dice cut-offs : No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
-- [x] No rewards: dice is a pure luck test; cards, characters, and fish remain the only collectibles.
+- [x] No rewards: dice is a pure luck test. Collectibles come only from the card pack, Daily Summon, Lucky Fishing, and The Wishing Well.
 - [ ] Implement roll generation, persistence, and board completion state; verify category probabilities by enumeration in tests.
 
 #### Combination probabilities
@@ -388,10 +388,19 @@ Renamed from Plinko / Falling Star. Reimagined so the centre is the prize rather
 | Copper | 0 | 16.875% | 6 | 33.44 | Unlucky |
 | Cobwebs | 0 | 25.000% | 4 | 12.50 | Jinxed |
 
+### The Wishing Well — agreed design
+
+- [x] Format: one coin per day when this game is one of the user's five daily selections. The player first chooses a wish: **Fortune, Love, Adventure, Wisdom, or Mischief**. The wish only chooses the theme of the object; the odds are identical for every wish.
+- [x] Toss: flick the coin into the well (click/tap or Enter also works) → splash → ripples glow brighter for rarer tiers → the object floats up in a bubble with its name and a one-line description. Generated and saved before the toss; reduced-motion path uses fades.
+- [x] Tiers (same for every wish): Soggy 25%, Ordinary 22%, Curious 20%, Enchanted 17%, Wondrous 13%, Legendary 3% (about 1 in 33). Tone: gently funny at the bottom (a damp sock, a bent spoon), magical at the top (a jar of bottled starlight).
+- [x] Score and labels (shared score; per-game cut-offs): Soggy 12.5 Jinxed (25%); Ordinary 36 Unlucky (22%); Curious 57 Fair Luck (20%); Enchanted 75.5 Lucky (17%); Wondrous 90.5 and Legendary 98.5 Charmed (16% combined). Result shows the object, “about 1 in N”, label, and score.
+- [x] Collection: a **Curios** tab with 60 objects (5 wishes × 6 tiers × 2 objects, equally likely within a wish and tier), following the agreed collection rules (owned or not, silhouettes for missing objects, no copies). The 10 Legendary objects are the long chase: at least ~330 tosses on average even with well-chosen wishes. No streak reward.
+- [ ] Write the 60 objects (names and one-line descriptions) for each wish and tier.
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
-- [x] Organize the collection into separate Cards, Characters, and Fish tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
+- [x] Organize the collection into separate Cards, Characters, Fish, and Curios tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
 - [x] Show undiscovered items as numbered silhouettes with their rarity, plus progress such as “37 / 120 collected”. Show no quantities (ownership only) and no variants at launch.
 - [x] Store collections on a server under an anonymous player ID created on first visit and kept in the browser, with no account needed to play. Optional sign-in later links the anonymous player to an account for cross-device sync and a leaderboard name. Without signing in, clearing browser data loses the collection. The tarot introduction stays browser-only as agreed.
 - [ ] Derive ownership from the player's saved official results (packs, later summons) rather than a separately awarded list, so an item is owned if any saved result contains it. Store stable item identifiers, item type, and rarity, plus the game day each item was first obtained. No copy counts.
@@ -516,6 +525,7 @@ Renamed from Plinko / Falling Star. Reimagined so the centre is the prize rather
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | No separate launch set; games are designed one at a time | Agreed |
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
+| The Wishing Well: choose a wish theme, toss a coin, six object tiers, 60 collectible Curios | Agreed |
 | Three Chests: fair pick of three independently filled chests; luck = your treasure, then chests beaten | Agreed |
 | Falling Star: one wished star per day, funnel board with slot widths matching odds, rare narrow centre (Supernova 3%) | Agreed |
 | Lucky Fishing: one cast/day; type, size class, and trait; rarest exact catch ranks highest, junk lowest; Fish tab with personal bests | Agreed |
