@@ -13,13 +13,14 @@ import { addPick, allPlayed, carryOver, clearBoard, markPlayed, moveSlot, remove
 import { seededRng } from '../src/rng.ts';
 
 describe('catalog', () => {
-  it('puts every game on exactly one board of three', () => {
+  it('puts every game on exactly one board', () => {
     const onBoards = Object.values(BOARDS).flatMap((b) => b.games);
     expect(onBoards.sort()).toEqual([...GAME_IDS].sort());
     for (const b of Object.values(BOARDS)) {
-      expect(b.games).toHaveLength(3);
       for (const g of b.games) expect(GAMES[g].board).toBe(b.id);
     }
+    expect(BOARDS['night-sky'].games).toEqual(['falling-star', 'wishing-well']);
+    expect(GAME_IDS).toHaveLength(11);
   });
 
   it('every game has an expected score of 50', () => {

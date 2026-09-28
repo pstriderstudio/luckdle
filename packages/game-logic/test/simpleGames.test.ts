@@ -3,13 +3,6 @@ import { correctCalls, evaluateStreak, flipFace, generateRun, streakProbability 
 import { dropStar, evaluateFallingStar, fallingStarTable, slotWidths, STAR_SLOTS } from '../src/games/fallingStar.ts';
 import { chestsTable, evaluateChests, fillChests, TREASURES } from '../src/games/threeChests.ts';
 import { CURIOS, evaluateWish, tossCoin, wishingWellTable } from '../src/games/wishingWell.ts';
-import {
-  alignRings,
-  evaluateCosmic,
-  LABEL_SPREAD_BOUNDS,
-  spreadCdf,
-  spreadOf,
-} from '../src/games/cosmicAlignment.ts';
 import { rankOutcomes } from '../src/luck.ts';
 import { seededRng } from '../src/rng.ts';
 import { expectLabelPercents } from './helpers.ts';
@@ -124,36 +117,5 @@ describe('Three Chests', () => {
     expect(evaluateChests(outcome, 2).beaten).toBe(0);
     const rng = seededRng(10);
     for (let i = 0; i < 100; i++) expect(evaluateChests(fillChests(rng), i % 3).score).toBeGreaterThan(0);
-  });
-});
-
-describe('Cosmic Alignment', () => {
-  it('uses 20% label bands at the agreed spreads', () => {
-    expect(LABEL_SPREAD_BOUNDS.map((b) => Number(b.toFixed(2)))).toEqual([92.95, 131.45, 161.0, 186.33]);
-    LABEL_SPREAD_BOUNDS.forEach((b, i) => expect(spreadCdf(b)).toBeCloseTo(0.2 * (i + 1), 12));
-  });
-
-  it('gives the agreed “about 1 in N” values', () => {
-    expect(Math.round(1 / spreadCdf(60))).toBe(12);
-    expect(Math.round(1 / spreadCdf(10))).toBe(432);
-    expect(Math.round(1 / spreadCdf(5))).toBe(1728);
-    expect(Math.round(1 / spreadCdf(1))).toBe(43200);
-    expect(spreadCdf(240)).toBeCloseTo(1, 12);
-  });
-
-  it('measures spread as the narrowest containing arc', () => {
-    expect(spreadOf([350, 10, 5])).toBeCloseTo(20, 9);
-    expect(spreadOf([0, 120, 240])).toBeCloseTo(240, 9);
-  });
-
-  it('empirical spread distribution matches the formula', () => {
-    const rng = seededRng(99);
-    const n = 40000;
-    const labels: Record<string, number> = {};
-    for (let i = 0; i < n; i++) {
-      const r = evaluateCosmic(alignRings(rng));
-      labels[r.label] = (labels[r.label] ?? 0) + 1;
-    }
-    for (const count of Object.values(labels)) expect(count / n).toBeCloseTo(0.2, 1);
   });
 });

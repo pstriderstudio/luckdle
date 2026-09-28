@@ -52,7 +52,6 @@ insert into public.games (id, board, name) values
   ('gem-breaker', 'wilds', 'Gem Breaker'),
   ('garden-of-chance', 'wilds', 'Garden of Chance'),
   ('falling-star', 'night-sky', 'Falling Star'),
-  ('cosmic-alignment', 'night-sky', 'Cosmic Alignment'),
   ('wishing-well', 'night-sky', 'The Wishing Well');
 
 -- ---------------------------------------------------------------------------

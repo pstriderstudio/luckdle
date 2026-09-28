@@ -7,7 +7,6 @@
 import {
   cardPack,
   coinStreak,
-  cosmicAlignment,
   carryOver,
   dailyLabel,
   dailyScore,
@@ -16,6 +15,7 @@ import {
   fallingStar,
   type GameId,
   gameDayOf,
+  isGameId,
   GAMES_PER_DAY,
   gardenOfChance,
   gemBreaker,
@@ -29,6 +29,7 @@ import {
   clearBoard,
   moveSlot,
   removePick,
+  swapPick,
   type Rng,
   secureRng,
   seededRng,
@@ -121,8 +122,6 @@ function generate(game: GameId, ctx: GenerateContext): Outcome {
     }
     case 'gem-breaker':
       return gemBreaker.breakGeode(rng);
-    case 'cosmic-alignment':
-      return cosmicAlignment.alignRings(rng);
     case 'lucky-number':
       return { secret: luckyNumber.newSecret(rng), guesses: [] } satisfies luckyNumber.LuckyNumberState;
     case 'garden-of-chance':
@@ -153,10 +152,6 @@ function toView(game: GameId, o: Outcome): GameView {
       return { game, wish: o.wish, curioId: o.curioId, tier: o.tier };
     case 'gem-breaker':
       return { game, find: o };
-    case 'cosmic-alignment': {
-      const r = cosmicAlignment.evaluateCosmic(o);
-      return { game, angles: o.angles, spread: r.spread, flavour: r.flavour };
-    }
     case 'lucky-number': {
       const state = o as luckyNumber.LuckyNumberState;
       return {
@@ -240,10 +235,6 @@ function evaluate(game: GameId, o: Outcome): ResultSummary {
           : `${gemBreaker.GEM_PURITIES[g.purity]} ${gemBreaker.GEM_SIZES[g.size]} ${itemName('gem', g.mineralId)}, ${g.carats} ct`;
       return { ...r, headline };
     }
-    case 'cosmic-alignment': {
-      const r = cosmicAlignment.evaluateCosmic(o);
-      return { ...r, headline: `${r.flavour} · ${r.spread.toFixed(1)}° spread` };
-    }
     case 'lucky-number': {
       const n = o.guesses.length;
       return {
@@ -312,6 +303,17 @@ function hashString(s: string): number {
   return h >>> 0;
 }
 
+/** Removes boards and results for games no longer in the catalog (e.g. Cosmic Alignment). */
+function dropRetiredGames(stored: Stored): Stored {
+  for (const day of Object.values(stored.days)) {
+    day.board = day.board.filter((slot) => isGameId(slot.game));
+    for (const game of Object.keys(day.results)) {
+      if (!isGameId(game)) delete (day.results as Record<string, unknown>)[game];
+    }
+  }
+  return stored;
+}
+
 // ---------------------------------------------------------------------------
 
 export class LocalGameService implements GameService {
@@ -328,7 +330,7 @@ export class LocalGameService implements GameService {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as Stored;
-        if (parsed.version === 1) return parsed;
+        if (parsed.version === 1) return dropRetiredGames(parsed);
       }
     } catch {
       // Unreadable storage: start fresh.
@@ -496,14 +498,19 @@ export class LocalGameService implements GameService {
     this.updateBoard((b) => moveSlot(b, from, to));
   }
 
+  async swapPick(out: GameId, into: GameId) {
+    this.updateBoard((b) => swapPick(b, out, into));
+  }
+
   async clearBoard() {
     this.updateBoard(clearBoard);
   }
 
   async start(game: GameId, input?: StartInput): Promise<GameSession> {
     const day = this.day();
-    if (!day.board.some((s) => s.game === game)) throw new Error('Add this game to your board to play it');
     if (day.results[game]) return this.session(game);
+    // Playing a game adds it to the board (one of today's five picks).
+    if (!day.board.some((s) => s.game === game)) this.updateBoard((b) => addPick(b, game));
     const today = this.today();
     const ownedByType = (type: ItemType) =>
       new Set([...this.ownedItems().values()].filter((i) => i.type === type).map((i) => i.itemId));

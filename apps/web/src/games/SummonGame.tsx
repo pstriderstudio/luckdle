@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { dailySummon } from '@luckdle/game-logic';
 import { itemName } from '../items.ts';
 import { pause } from '../ui.tsx';
@@ -65,6 +65,11 @@ export function SummonGame({ session, start, save, finish, reduced }: GameProps<
   };
 
   const skipped = pulls.slice(0, p.next).filter((x) => x.skipReveal).length;
+
+  // The result appears together with the grid of all ten; no extra click.
+  useEffect(() => {
+    if (stage === 'grid' && session && !session.completed) void finish();
+  }, [stage, session, finish]);
 
   if (stage === 'portal') {
     const bestNow = Math.max(0, ...(session?.view.pulls ?? []).map((x) => x.stars));
@@ -133,11 +138,6 @@ export function SummonGame({ session, start, save, finish, reduced }: GameProps<
           </div>
         ))}
       </div>
-      {!session?.completed && (
-        <button type="button" className="primary big" onClick={finish}>
-          See my luck
-        </button>
-      )}
     </div>
   );
 }

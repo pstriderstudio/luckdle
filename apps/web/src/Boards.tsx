@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from 'react';
-import { BOARD_IDS, BOARDS, type BoardId, GAMES, GAMES_PER_DAY, type GameId } from '@luckdle/game-logic';
+import { BOARD_IDS, BOARDS, type BoardId, GAMES, GAMES_PER_DAY } from '@luckdle/game-logic';
 import { useStore } from './service/store.tsx';
 import { navigate } from './route.ts';
 import { formatCountdown, useNow } from './ui.tsx';
@@ -15,10 +15,6 @@ export function Boards({ tab }: { tab: Tab }) {
   const { board, sessions } = snapshot;
   const picked = new Set(board.map((s) => s.game));
   const allPlayed = board.length === GAMES_PER_DAY && board.every((s) => sessions[s.game]?.completed);
-
-  const pick = async (game: GameId) => {
-    await run((s) => s.addPick(game));
-  };
 
   return (
     <div>
@@ -37,7 +33,7 @@ export function Boards({ tab }: { tab: Tab }) {
         {tab === 'mine' ? (
           <section>
             {board.length === 0 && (
-              <p className="hint">Pick up to five games from the boards above. Each gets one official play today.</p>
+              <p className="hint">Browse the boards above and open any game. Up to five games a day, one official play each.</p>
             )}
             <ul className="grid personal">
               {Array.from({ length: GAMES_PER_DAY }, (_, i) => {
@@ -113,26 +109,20 @@ export function Boards({ tab }: { tab: Tab }) {
             {BOARDS[tab].games.map((id) => {
               const game = GAMES[id];
               const isPicked = picked.has(id);
-              const full = board.length >= GAMES_PER_DAY;
+              const session = sessions[id];
               return (
                 <li key={id} className="panel">
-                  <button
-                    type="button"
-                    className="pick"
-                    disabled={isPicked || full}
-                    onClick={() => pick(id)}
-                    aria-label={isPicked ? `${game.name} (picked)` : `Add ${game.name} to my board`}
-                  >
+                  <a className="pick" href={`#/game/${id}`} aria-label={`${game.name}${isPicked ? ' (picked)' : ''}`}>
                     <h2>{game.name}</h2>
                     <p>{game.tagline}</p>
-                    {isPicked ? (
+                    {session?.completed ? (
+                      <span className="badge played">Played</span>
+                    ) : isPicked ? (
                       <span className="badge picked">Picked</span>
-                    ) : full ? (
-                      <span className="badge muted">Board full</span>
                     ) : (
-                      <span className="badge add-badge">+ Add</span>
+                      <span className="badge add-badge">Open →</span>
                     )}
-                  </button>
+                  </a>
                 </li>
               );
             })}

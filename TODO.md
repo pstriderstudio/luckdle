@@ -108,7 +108,7 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, Gem Breaker, Cosmic Alignment (may be cut later), Lucky Number, and Garden of Chance. Every candidate in the table is now designed.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, Gem Breaker, Lucky Number, and Garden of Chance. Every candidate in the table is now designed. Cosmic Alignment was designed and then cut (see its section).
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -121,7 +121,7 @@ Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing
 | Lucky Fishing | Make one cast and reveal a catch with a species, size, and unusual trait. | Agreed; see the Lucky Fishing section. Species writing and art remain. |
 | The Wishing Well | Make a wish, toss a coin, and receive a whimsical object themed to your wish. | Agreed; see the Wishing Well section. Object writing remains. |
 | Gem Breaker | Strike a geode three times to reveal a mineral with size and purity. | Agreed; see the Gem Breaker section. Mineral writing remains. |
-| Cosmic Alignment | Three rings settle on their own; luck is how tightly their Sun, Moon, and Star markers align. | Agreed; see the Cosmic Alignment section. May be cut from the game list later. |
+| ~~Cosmic Alignment~~ | Three rings settle on their own; luck is how tightly their Sun, Moon, and Star markers align. | **Cut** after playtesting (2026-09-28); design kept below for reference. |
 | Lucky Number | Guess a secret number from 0–9999 with higher/lower hints and correct-position digit reveals; fewer guesses than average is luckier. | Agreed; see the Lucky Number section. |
 | Garden of Chance | Plant a mystery seed, water it three times, and see what blooms, with stacking mutations. | Agreed; see the Garden of Chance section. Flower writing remains. |
 
@@ -409,7 +409,9 @@ Structured like Lucky Fishing (rarest exact find ranks highest) with a different
 - [x] Collection: a **Gems** tab of 30 minerals (owned or not, silhouettes for missing), plus personal bests per mineral: largest size and purest grade found. Derived from saved finds. No streak reward. Pace at one geode per day: full tab ~283 days typical, ~597 for the unluckiest 10%.
 - [ ] Write the 30 minerals (names, carat ranges, short descriptions).
 
-### Cosmic Alignment — agreed design (may be cut from the game list later)
+### Cosmic Alignment — cut from the game list
+
+Removed after playtesting on 2026-09-28; the code, schema row, and UI were deleted. The design below is kept for reference only.
 
 - [x] Format: one alignment per day when this game is one of the user's five daily selections. Three concentric rings spin, each carrying one marker (Sun, Moon, Star). The player taps **Begin**; the rings slow and settle on their own, outer → middle → inner. No tap-to-stop, so there is no implied timing skill. Final angles are generated and saved first; reduced-motion path uses fades.
 - [x] Luck = **spread**: the narrowest arc containing all three markers (0°–240°); smaller is luckier. Marker angles are independent and uniform.
@@ -477,8 +479,8 @@ Replaces the earlier random-number-pattern idea.
 
 ### Decisions to revisit after selecting the game list
 
-- [x] Board categories (names are placeholders): **The Arena** (competitive) — Lucky Number, Coin Streak, Dice of Destiny; **The Vault** — Mystery Card Pack, Daily Summon, Three Chests; **The Wilds** — Lucky Fishing, Gem Breaker, Garden of Chance; **The Night Sky** — Falling Star, Cosmic Alignment, The Wishing Well. If Cosmic Alignment is cut, The Night Sky keeps two games.
-- [x] Navigation: the personal board is home, showing five panels with “+” empty slots until filled. The four category boards sit alongside as swipeable/clickable tabs; tapping a game on a category board adds it to the next empty slot. After tarot, first-time visitors land on the category boards with an empty personal board.
+- [x] Board categories (names are placeholders): **The Arena** (competitive) — Lucky Number, Coin Streak, Dice of Destiny; **The Vault** — Mystery Card Pack, Daily Summon, Three Chests; **The Wilds** — Lucky Fishing, Gem Breaker, Garden of Chance; **The Night Sky** — Falling Star, The Wishing Well (Cosmic Alignment was cut, so The Night Sky has two games).
+- [x] Navigation: the personal board is home, showing five panels with “+” empty slots until filled. The four category boards sit alongside as swipeable/clickable tabs; tapping a game on a category board opens that game's page, where the player can add it to their board before playing, or simply play it, which adds it to the next empty slot. When the board is full, playing a new game means swapping out an unplayed pick; games already played stay locked. After tarot, first-time visitors land on the category boards with an empty personal board.
 - [x] Players build their board as they go; they don't need to pick all five before playing.
 - [x] Unplayed selections can be swapped any time that day. A game locks the moment its result is generated (tapping Roll, tearing open the pack).
 - [x] Yesterday's five picks carry over as today's board, unplayed and swappable until played. A **Clear board** button starts fresh.
@@ -507,6 +509,7 @@ Replaces the earlier random-number-pattern idea.
 - [x] Compare users' daily luck with other users after they finish their games for the day. Keep the one-time tarot introduction separate.
 - [x] Daily report: daily score, daily label, and percentile (e.g. “Luckier than 82% of players today”), then one row per game with its label and score. Tarot is excluded. Before all five games are played it shows progress (e.g. “3 of 5 played”).
 - [x] Each game's result screen shows its “about 1 in N” rarity from that game's outcome distribution (defined per game above).
+- [x] The result appears automatically as soon as a game's reveal ends (e.g. with the pack podium or the summon grid); there is no separate click to see it.
 - [ ] Explore a shared daily theme across games.
 - [x] Share card: Wordle-style copyable text with the date, daily score, daily label, and one coloured square per game by label (e.g. `Luckdle · 28 Sep · 78 Lucky 🟪🟩🟨🟩🟥`). No tarot and no game results beyond labels. Emoji mapping: Jinxed 🟥 · Unlucky 🟧 · Fair Luck 🟨 · Lucky 🟩 · Charmed 🟪.
 - [x] Put every game on the shared 0–100 luck score, so each game's score measures the same thing and no game choice raises expected standing.
@@ -549,7 +552,9 @@ See [ADR 0001](docs/adr/0001-tech-stack.md).
 | Daily score = average of five game scores; percentile vs finished players (live, final at reset; simulated field under 20 players); daily label by quintile; top-100 leaderboard for signed-in players; Wordle-style share card | Agreed |
 | Stack: TypeScript web app (React + Vite) with Capacitor later; Supabase backend with all outcomes generated server-side (ADR 0001) | Agreed |
 | Personal board is home with category boards as tabs; yesterday's picks carry over; drag-to-rearrange; Picked / Ready / Played states | Agreed |
-| Four boards of three: Arena (Lucky Number, Coin Streak, Dice), Vault (Card Pack, Summon, Chests), Wilds (Fishing, Gems, Garden), Night Sky (Falling Star, Cosmic Alignment, Wishing Well) | Agreed; names are placeholders |
+| Category boards open a game's page; add it to the board there, or play it to add it automatically; swap out an unplayed pick when full | Agreed (playtest feedback, 2026-09-28) |
+| Each game's result (label, score, 1-in-N) appears automatically when its reveal ends; no extra “see my luck” click | Agreed (playtest feedback, 2026-09-28) |
+| Four boards: Arena (Lucky Number, Coin Streak, Dice), Vault (Card Pack, Summon, Chests), Wilds (Fishing, Gems, Garden), Night Sky (Falling Star, Wishing Well) | Agreed; names are placeholders |
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
 | Dice luck is based on combinations: rarer combinations are luckier, no/minimal combinations are low luck | Agreed |
 | Dice: fair d6; ranking five of a kind → four of a kind → straight → full house → three of a kind → two pairs → one pair → no combination; result shows dice, combination, 1-in-N, label, score; no rewards | Agreed |
@@ -595,7 +600,7 @@ See [ADR 0001](docs/adr/0001-tech-stack.md).
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
 | Garden of Chance: plant and water a seed; tier × stacking mutations, rarest bloom ranks highest; Garden tab showing best bloom per species | Agreed |
 | Lucky Number: 0–9999 guessing game with higher/lower and digit reveals; scored against a simulated careful player's guess counts | Agreed |
-| Cosmic Alignment: rings settle on their own; luck = tightness of Sun/Moon/Star alignment; continuous score, labels 20% each | Agreed; may be cut later |
+| Cosmic Alignment: rings settle on their own; luck = tightness of Sun/Moon/Star alignment; continuous score, labels 20% each | Cut after playtesting (2026-09-28) |
 | Gem Breaker: three strikes to crack a geode; mineral × size × purity, rarest find ranks highest; Gems tab with personal bests | Agreed |
 | The Wishing Well: choose a wish theme, toss a coin, six object tiers, 60 collectible Curios | Agreed |
 | Three Chests: fair pick of three independently filled chests; luck = your treasure, then chests beaten | Agreed |

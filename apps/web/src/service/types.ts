@@ -44,7 +44,6 @@ export type GameView =
   | { game: 'three-chests'; pick: number | null; chests: (threeChests.Treasure | null)[] }
   | { game: 'wishing-well'; wish: wishingWell.Wish; curioId: string; tier: wishingWell.WellTier }
   | { game: 'gem-breaker'; find: gemBreaker.GemOutcome }
-  | { game: 'cosmic-alignment'; angles: number[]; spread: number; flavour: string }
   | {
       game: 'lucky-number';
       digits: number;
@@ -132,9 +131,14 @@ export interface GameService {
   addPick(game: GameId): Promise<void>;
   removePick(game: GameId): Promise<void>;
   movePick(from: number, to: number): Promise<void>;
+  /** Replaces an unplayed pick with another game, keeping its position. */
+  swapPick(out: GameId, into: GameId): Promise<void>;
   clearBoard(): Promise<void>;
 
-  /** Generates and saves the outcome; the game locks from this moment. */
+  /**
+   * Generates and saves the outcome; the game locks from this moment.
+   * A game not yet on the board is added to it first (fails when the board is full).
+   */
   start(game: GameId, input?: StartInput): Promise<GameSession>;
   act(game: GameId, action: GameAction): Promise<GameSession>;
   saveProgress(game: GameId, progress: Progress): Promise<void>;

@@ -23,6 +23,5 @@ export * as fallingStar from './games/fallingStar.ts';
 export * as threeChests from './games/threeChests.ts';
 export * as wishingWell from './games/wishingWell.ts';
 export * as gemBreaker from './games/gemBreaker.ts';
-export * as cosmicAlignment from './games/cosmicAlignment.ts';
 export * as luckyNumber from './games/luckyNumber.ts';
 export * as gardenOfChance from './games/gardenOfChance.ts';

@@ -977,57 +977,6 @@ button:disabled {
   animation: pop 0.4s ease-out;
 }
 
-/* Cosmic alignment */
-
-.rings {
-  position: relative;
-  width: 280px;
-  height: 280px;
-}
-
-.ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 2px solid var(--panel-edge);
-  transition-property: transform;
-  transition-timing-function: cubic-bezier(0.1, 0.7, 0.2, 1);
-}
-
-.rings.ready .ring {
-  animation: spin 6s linear infinite;
-}
-
-.rings.ready .ring-1 {
-  animation-duration: 4s;
-  animation-direction: reverse;
-}
-
-.rings.ready .ring-2 {
-  animation-duration: 3s;
-}
-
-.ring-0 {
-  inset: 0;
-}
-
-.ring-1 {
-  inset: 40px;
-}
-
-.ring-2 {
-  inset: 80px;
-}
-
-.marker {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.4rem;
-  color: var(--accent);
-  line-height: 1;
-}
-
 /* Lucky number */
 
 .digits {
@@ -1474,4 +1423,39 @@ button:disabled {
     transition-duration: 0.15s !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Game page: board status */
+
+.game-tagline {
+  margin-top: -6px;
+}
+
+.board-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.board-status .badge {
+  margin-top: 0;
+}
+
+.board-status > button:not(.link) {
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.swap p {
+  margin: 0 0 8px;
+}
+
+.swap .row-actions {
+  justify-content: flex-start;
 }

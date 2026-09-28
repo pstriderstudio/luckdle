@@ -1,5 +1,5 @@
 import { type ComponentType, useCallback, useMemo } from 'react';
-import { GAMES, type GameId } from '@luckdle/game-logic';
+import { BOARDS, GAMES, GAMES_PER_DAY, type GameId } from '@luckdle/game-logic';
 import { useStore } from '../service/store.tsx';
 import type { GameSession, Progress } from '../service/types.ts';
 import { navigate } from '../route.ts';
@@ -14,7 +14,6 @@ import { FallingStarGame } from './FallingStarGame.tsx';
 import { ThreeChestsGame } from './ThreeChestsGame.tsx';
 import { WishingWellGame } from './WishingWellGame.tsx';
 import { GemGame } from './GemGame.tsx';
-import { CosmicGame } from './CosmicGame.tsx';
 import { LuckyNumberGame } from './LuckyNumberGame.tsx';
 import { GardenGame } from './GardenGame.tsx';
 
@@ -29,7 +28,6 @@ const COMPONENTS: Record<GameId, ComponentType<GameProps<any>>> = {
   'three-chests': ThreeChestsGame,
   'wishing-well': WishingWellGame,
   'gem-breaker': GemGame,
-  'cosmic-alignment': CosmicGame,
   'lucky-number': LuckyNumberGame,
   'garden-of-chance': GardenGame,
 };
@@ -45,7 +43,6 @@ const UNITS: Partial<Record<GameId, string>> = {
   'three-chests': 'picks',
   'wishing-well': 'tosses',
   'gem-breaker': 'geodes',
-  'cosmic-alignment': 'alignments',
   'garden-of-chance': 'seeds',
 };
 
@@ -72,27 +69,57 @@ export function GameScreen({ game }: { game: GameId }) {
   const session = snapshot.sessions[game] as GameSession | undefined;
   const onBoard = snapshot.board.some((s) => s.game === game);
   const Component = COMPONENTS[game];
+  const picks = snapshot.board.length;
+  const full = picks >= GAMES_PER_DAY;
+  const unplayed = snapshot.board.filter((s) => !snapshot.sessions[s.game]);
+  // Not on the board and no room: the player must swap out an unplayed pick (or has played all five).
+  const blocked = !session && !onBoard && full;
+  const backTab = onBoard || session ? 'mine' : info.board;
 
   return (
     <div className="game-screen">
       <p>
-        <a href="#/board">← My board</a>
+        <a href={backTab === 'mine' ? '#/board' : `#/board/${backTab}`}>{backTab === 'mine' ? '← My board' : `← ${BOARDS[info.board].name}`}</a>
       </p>
       <h1 className="game-title">{info.name}</h1>
-      {!onBoard && !session ? (
-        <div className="stage">
-          <p>{info.tagline}</p>
-          <p className="muted">Add this game to your board to play it. Each game on your board gets one official play today.</p>
-          <button
-            type="button"
-            className="primary"
-            disabled={snapshot.board.length >= 5}
-            onClick={() => run((s) => s.addPick(game))}
-          >
-            {snapshot.board.length >= 5 ? 'Your board is full' : 'Add to my board'}
-          </button>
+      {!session && <p className="muted game-tagline">{info.tagline}</p>}
+
+      {!session && (
+        <div className="board-status">
+          {onBoard ? (
+            <>
+              <span className="badge ready">On your board</span>
+              <button type="button" className="link" onClick={() => run((s) => s.removePick(game))}>
+                Remove from board
+              </button>
+            </>
+          ) : !full ? (
+            <>
+              <span className="muted small">
+                Not on your board yet ({picks}/{GAMES_PER_DAY} picked). Playing adds it automatically.
+              </span>
+              <button type="button" onClick={() => run((s) => s.addPick(game))}>
+                Add to my board
+              </button>
+            </>
+          ) : unplayed.length > 0 ? (
+            <div className="swap">
+              <p className="small">Your board is full. Swap out an unplayed game to play this one:</p>
+              <div className="row-actions">
+                {unplayed.map((slot) => (
+                  <button key={slot.game} type="button" onClick={() => run((s) => s.swapPick(slot.game, game))}>
+                    Swap out {GAMES[slot.game].name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="small">You’ve played all five games today. A new board opens at the reset.</p>
+          )}
         </div>
-      ) : (
+      )}
+
+      {!blocked && (
         <Component
           // Remount when the game day changes (playtest “next day”).
           key={snapshot.gameDay}

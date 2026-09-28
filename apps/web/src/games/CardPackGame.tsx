@@ -89,6 +89,11 @@ export function CardPackGame({ session, start, save, finish, reduced, streak, ne
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage, p.next, cards.length]);
 
+  // The result appears as soon as the podium does; no extra click.
+  useEffect(() => {
+    if (stage === 'podium' && session && !session.completed) void finish();
+  }, [stage, session, finish]);
+
   const revealed = cards.slice(0, p.next).filter((c) => !c.skipReveal);
   const skipped = cards.slice(0, p.next).filter((c) => c.skipReveal).length;
 
@@ -175,11 +180,6 @@ export function CardPackGame({ session, start, save, finish, reduced, streak, ne
           );
         })}
       </div>
-      {!session?.completed && (
-        <button type="button" className="primary big" onClick={finish}>
-          See my luck
-        </button>
-      )}
       <details className="pack-list">
         <summary>All 12 cards</summary>
         <div className="revealed-cards">
