@@ -9,7 +9,7 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 - Provide several browseable boards grouped by game type. Dice, cards, and chance are example categories; finalize categories after choosing the game list.
 - Free users can choose five games per day to make their own personal board. Each chosen game gets one attempt per day; unplayed picks can be swapped until played; everyone shares one global daily reset (see section 4).
 - Game boards do not display results. Decide how results are presented separately; do not assume score or outcome previews on game panels.
-- Provide a collection section showing the cards and gacha characters the user has pulled.
+- Provide a collection section showing the cards and gacha characters the user has pulled. Collections, boards, and daily results are stored on a server under an anonymous player created on first visit; signing in is optional and adds cross-device sync and a leaderboard name.
 - Score every game on one shared 0–100 luck scale: the percentage of that game's possible results ranked below yours, plus half of those that tie with it. Equal results get equal scores; no hidden tie-breakers.
 - Pair every game's luck score with one of five plain-language luck labels, worst to best: **Jinxed**, **Unlucky**, **Fair Luck**, **Lucky**, **Charmed**. Each game sets its own cut-offs over its ranked results so that every label occurs, choosing the cut points that bring the label frequencies as close to 20% each as the game's outcomes allow. Equal results always share a label, so a label covers a different score range in each game. The tarot outlook uses the same five words.
 - Give dice outcomes both a plain-language luck label and a numerical luck score. After users finish their games for the day, compare their daily luck with other users. The scoring scale, aggregation, and comparison presentation remain to be designed.
@@ -281,7 +281,7 @@ The most common pack (R / C / C, 31.69%) is Jinxed with a score of 15.84. Scores
   - **Reduced motion:** the same order and steps, with quick fades instead of tearing, rising, and flipping.
 - [ ] Build the reveal using placeholder cards; retain an accessible reduced-motion path. Pack contents should be fixed before reveals so animation timing does not change the outcome.
 - [x] Make pulled cards persistent collectibles visible in the site's collection section alongside gacha characters.
-- [ ] Define collection storage, duplicate counts, same-pack duplicate handling, and whether special variants exist. Defer artwork direction until the games are finished.
+- [x] Define collection storage: server-side, owned or not owned per card with no copy counts, so duplicates (including same-pack duplicates) add nothing. No special variants (foil, alternate art) at launch. Defer artwork direction until the games are finished.
 - [x] Define daily attempts: one pack per day when this game is one of the user's five daily selections. The pack is saved before the reveal (see the opening sequence).
 
 Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/en/products/suda/) as a nine-card booster; Wizards' [Play Booster introduction](https://magic.wizards.com/en/news/making-magic/what-are-play-boosters) describes fourteen-card packs. Real products vary, so use these as structural inspiration rather than assuming one universal pack format.
@@ -289,10 +289,10 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
-- [ ] Decide collection organization, such as separate Cards and Characters tabs, rarity filters, and newly collected markers.
-- [ ] Decide whether to display only acquired items or also undiscovered slots, and how owned quantities and variants appear.
-- [ ] Decide browser-local versus account-backed storage and cross-device behavior. Browser-only tarot tracking does not determine collection storage.
-- [ ] Store stable item identifiers, item type, rarity, and ownership; define quantities and acquisition metadata after duplicate behavior is settled.
+- [x] Organize the collection into separate Cards and Characters tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
+- [x] Show undiscovered items as numbered silhouettes with their rarity, plus progress such as “37 / 120 collected”. Show no quantities (ownership only) and no variants at launch.
+- [x] Store collections on a server under an anonymous player ID created on first visit and kept in the browser, with no account needed to play. Optional sign-in later links the anonymous player to an account for cross-device sync and a leaderboard name. Without signing in, clearing browser data loses the collection. The tarot introduction stays browser-only as agreed.
+- [ ] Derive ownership from the player's saved official results (packs, later summons) rather than a separately awarded list, so an item is owned if any saved result contains it. Store stable item identifiers, item type, and rarity, plus the game day each item was first obtained. No copy counts.
 - [ ] Ensure resuming a pack opening cannot award the same pack twice; preserve generated contents and apply ownership changes once. Agreed behavior: cards are saved and awarded before the wrapper opens; resuming returns to the same card in the reveal.
 - [x] Check ownership for reveal skipping once, when the pack is generated. Within one pack, the first copy of a card below Rare is revealed (as New if unowned) and later copies are skipped.
 - [ ] Keep game odds and comparison scores independent of collection maturity: determine the top three and the score from all 12 actual pulls, including any skipped duplicate reveals. An already-owned low-rarity card that qualifies for the podium appears there with an Owned tag, without replaying its individual reveal.
@@ -315,7 +315,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 - [x] Unplayed selections can be swapped any time that day. A game locks the moment its result is generated (tapping Roll, tearing open the pack).
 - [ ] Decide whether yesterday's board carries forward or users choose a fresh board each day.
 - [ ] Define what “make their own board” allows beyond choosing games: automatic arrangement, rearrangeable panels, or more customization.
-- [ ] Decide personal-board persistence and account requirements separately from the browser-only tarot introduction.
+- [x] Store the personal board's daily selections and progress on the server under the same anonymous player as collections and results; no account needed.
 - [ ] Define any paid-user offering later; no paid features, pricing, or expanded limits have been specified.
 
 ### Implementation work once board behavior is settled
@@ -335,7 +335,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 - [x] Use one global daily reset at the same moment for everyone, defining a single shared game day for results and comparisons.
 - [x] Reset at 3:00 AM US Eastern time (America/New_York), following daylight saving: 07:00 UTC in summer, 08:00 UTC in winter. Each game day runs from one 3 AM reset to the next.
 - [ ] Show a clear countdown to the next reset in the player's local time.
-- [ ] Decide whether collections and history require an account or can begin anonymously.
+- [x] Collections and history begin anonymously on the server; an account is optional.
 - [x] Compare users' daily luck with other users after they finish their games for the day. Keep the one-time tarot introduction separate.
 - [ ] Define the daily report and comparison presentation. Proposed: a daily luck score with a percentile among other eligible players, such as “Luckier than 82% of players today”; wording is illustrative, not an actual result.
 - [ ] Decide whether to show result rarity, such as “1 in 250,” and calculate it from the actual outcome distribution.
@@ -383,7 +383,9 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Card rarities: Common, Uncommon, Rare, Super Rare, Ultra Rare, Secret Rare | Agreed |
 | Independent wildcard odds: 65% / 25% / 7% / 2% / 0.9% / 0.1%; guaranteed-slot odds: 75% Rare / 20% Super / 4.5% Ultra / 0.5% Secret | Agreed |
 | Each card pack guarantees one Rare-or-better card; additional rare pulls are chance-based | Agreed |
-| Collection section for pulled cards and gacha characters | Agreed; persistence and display details remain open |
+| Collection section for pulled cards and gacha characters | Agreed |
+| Server-side storage under an anonymous player; optional sign-in for cross-device sync and leaderboard name | Agreed |
+| Collection tracks ownership only (no copy counts), shows undiscovered silhouettes and progress, no card variants at launch | Agreed |
 | Already-owned cards below Rare count among the 12 but skip their individual reveal, with no replacement | Agreed; pack odds remain unchanged |
 | Top-three rarest cards from the current pack form a podium and determine pack luck | Agreed |
 | Packs ranked by highest rarity first: podium, then the rest of the pack; ties only when all 12 rarities match | Agreed |
