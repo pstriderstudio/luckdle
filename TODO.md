@@ -477,7 +477,7 @@ Replaces the earlier random-number-pattern idea.
 
 ### Decisions to revisit after selecting the game list
 
-- [ ] Finalize board categories and which games belong to each; dice, cards, and chance are examples rather than approved categories.
+- [x] Board categories (names are placeholders): **The Arena** (competitive) — Lucky Number, Coin Streak, Dice of Destiny; **The Vault** — Mystery Card Pack, Daily Summon, Three Chests; **The Wilds** — Lucky Fishing, Gem Breaker, Garden of Chance; **The Night Sky** — Falling Star, Cosmic Alignment, The Wishing Well. If Cosmic Alignment is cut, The Night Sky keeps two games.
 - [ ] Decide how users move between category boards and their personal board.
 - [x] Players build their board as they go; they don't need to pick all five before playing.
 - [x] Unplayed selections can be swapped any time that day. A game locks the moment its result is generated (tapping Roll, tearing open the pack).
@@ -539,6 +539,7 @@ Replaces the earlier random-number-pattern idea.
 | One official attempt per chosen game per day; no practice plays; unplayed picks swappable until played; no redo after leaving | Agreed |
 | Independent results with equal odds; one global daily reset for everyone at 3:00 AM US Eastern (follows daylight saving) | Agreed |
 | Game boards do not display results | Agreed; result presentation deferred |
+| Four boards of three: Arena (Lucky Number, Coin Streak, Dice), Vault (Card Pack, Summon, Chests), Wilds (Fishing, Gems, Garden), Night Sky (Falling Star, Cosmic Alignment, Wishing Well) | Agreed; names are placeholders |
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
 | Dice luck is based on combinations: rarer combinations are luckier, no/minimal combinations are low luck | Agreed |
 | Dice: fair d6; ranking five of a kind → four of a kind → straight → full house → three of a kind → two pairs → one pair → no combination; result shows dice, combination, 1-in-N, label, score; no rewards | Agreed |
