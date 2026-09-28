@@ -495,7 +495,7 @@ Replaces the earlier random-number-pattern idea.
 - [ ] Make board navigation and selection usable on mobile and with a keyboard.
 - [ ] Route completed/skipped tarot introductions into the board experience without counting tarot toward the five daily game choices.
 
-## 4. Shared daily experience — proposals to revisit
+## 4. Shared daily experience and daily luck score
 
 - [x] Decide per-game attempt limits: one official attempt per selected game each day. Games not selected can be browsed on the boards but not played; there are no practice plays, so collections and comparisons only reflect official results.
 - [x] Leaving mid-animation or mid-reveal never grants a redo: returning shows the same saved result.
@@ -505,15 +505,19 @@ Replaces the earlier random-number-pattern idea.
 - [ ] Show a clear countdown to the next reset in the player's local time.
 - [x] Collections and history begin anonymously on the server; an account is optional.
 - [x] Compare users' daily luck with other users after they finish their games for the day. Keep the one-time tarot introduction separate.
-- [ ] Define the daily report and comparison presentation. Proposed: a daily luck score with a percentile among other eligible players, such as “Luckier than 82% of players today”; wording is illustrative, not an actual result.
-- [ ] Decide whether to show result rarity, such as “1 in 250,” and calculate it from the actual outcome distribution.
+- [x] Daily report: daily score, daily label, and percentile (e.g. “Luckier than 82% of players today”), then one row per game with its label and score. Tarot is excluded. Before all five games are played it shows progress (e.g. “3 of 5 played”).
+- [x] Each game's result screen shows its “about 1 in N” rarity from that game's outcome distribution (defined per game above).
 - [ ] Explore a shared daily theme across games.
-- [ ] Design a compact share card for daily game results, excluding the one-time tarot reading.
+- [x] Share card: Wordle-style copyable text with the date, daily score, daily label, and one coloured square per game by label (e.g. `Luckdle · 28 Sep · 78 Lucky 🟪🟩🟨🟩🟥`). No tarot and no game results beyond labels. Exact emoji mapping to be set during implementation.
 - [x] Put every game on the shared 0–100 luck score, so each game's score measures the same thing and no game choice raises expected standing.
-- [ ] Define a daily luck score from the completed game results and how unlike games are compared. A common scale alone does not guarantee comparable daily distributions: account for each selected game's odds, outcome ordering, ties, and differing score distributions before choosing an aggregation method.
-- [ ] Define comparison eligibility, tie handling, and whether standings are live or final. Comparisons must use actual eligible user results, distinct from theoretical outcome rarity; provide a clear state when there are too few results. The cohort is everyone playing the same global game day.
-- [x] Show both a personal percentile and a leaderboard after the user completes their games for the day. Exact layout, leaderboard identity/display names, and ranking rules remain to be defined.
-- [ ] Once game rules are final, verify that choice of games does not systematically inflate daily standing; assess calibration across different five-game boards and any later paid-user game counts.
+- [x] Daily luck score = the average of the five game scores (0–100). Every game's score is a percentile of its own outcomes, so each game has an expected score of 50 and no board raises the expected daily score.
+- [x] Eligibility: a player gets a daily score and comparison once all five games are played. The cohort is everyone who finished all five on the same global game day.
+- [x] Percentile: share of other eligible players that day with a lower daily score, plus half of ties. Live through the day (labelled “so far”), final at the 3 AM reset. While fewer than 20 players have finished, compare against a simulated field of players instead and say so.
+- [x] Daily label: the same five labels by today's percentile rank — top 20% Charmed, then Lucky, Fair Luck, Unlucky, bottom 20% Jinxed.
+- [x] Leaderboard: top 100 daily scores for the game day, **signed-in players only** (signing in provides the display name and blocks throwaway anonymous retries). Anonymous players still get their percentile. Equal scores share a place; no hidden tie-breakers.
+- [x] Show both a personal percentile and a leaderboard after the user completes their games for the day (rules above; exact layout during design).
+- [ ] Verify calibration by simulation: every game's expected score is 50, but games differ in spread (lumpy games like dice vary more), so check how often different boards reach the top of the leaderboard, and account for Lucky Number's skill element. Revisit for any later paid-user game counts.
+- [ ] Build the simulated field used when fewer than 20 players have finished.
 
 ## 5. Technical foundation — not yet selected
 
@@ -539,6 +543,7 @@ Replaces the earlier random-number-pattern idea.
 | One official attempt per chosen game per day; no practice plays; unplayed picks swappable until played; no redo after leaving | Agreed |
 | Independent results with equal odds; one global daily reset for everyone at 3:00 AM US Eastern (follows daylight saving) | Agreed |
 | Game boards do not display results | Agreed; result presentation deferred |
+| Daily score = average of five game scores; percentile vs finished players (live, final at reset; simulated field under 20 players); daily label by quintile; top-100 leaderboard for signed-in players; Wordle-style share card | Agreed |
 | Personal board is home with category boards as tabs; yesterday's picks carry over; drag-to-rearrange; Picked / Ready / Played states | Agreed |
 | Four boards of three: Arena (Lucky Number, Coin Streak, Dice), Vault (Card Pack, Summon, Chests), Wilds (Fishing, Gems, Garden), Night Sky (Falling Star, Cosmic Alignment, Wishing Well) | Agreed; names are placeholders |
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
