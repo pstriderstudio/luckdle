@@ -333,7 +333,8 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 - [x] Leaving mid-animation or mid-reveal never grants a redo: returning shows the same saved result.
 - [x] Players receive independent results with equal odds; outcomes are not shared between players.
 - [x] Use one global daily reset at the same moment for everyone, defining a single shared game day for results and comparisons.
-- [ ] Choose the global reset time (e.g. midnight UTC, which is 8pm Eastern during daylight time) and show a clear countdown to the next reset.
+- [x] Reset at 3:00 AM US Eastern time (America/New_York), following daylight saving: 07:00 UTC in summer, 08:00 UTC in winter. Each game day runs from one 3 AM reset to the next.
+- [ ] Show a clear countdown to the next reset in the player's local time.
 - [ ] Decide whether collections and history require an account or can begin anonymously.
 - [x] Compare users' daily luck with other users after they finish their games for the day. Keep the one-time tarot introduction separate.
 - [ ] Define the daily report and comparison presentation. Proposed: a daily luck score with a percentile among other eligible players, such as “Luckier than 82% of players today”; wording is illustrative, not an actual result.
@@ -368,7 +369,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Multiple boards grouped by game type | Agreed; categories deferred until the game list is chosen |
 | Free users choose five games per day for their own board | Agreed |
 | One official attempt per chosen game per day; no practice plays; unplayed picks swappable until played; no redo after leaving | Agreed |
-| Independent results with equal odds; one global daily reset for everyone | Agreed; reset time still to choose |
+| Independent results with equal odds; one global daily reset for everyone at 3:00 AM US Eastern (follows daylight saving) | Agreed |
 | Game boards do not display results | Agreed; result presentation deferred |
 | Dice game: one tap rolls all five dice once, with no rerolls | Agreed |
 | Dice luck is based on combinations: rarer combinations are luckier, no/minimal combinations are low luck | Agreed; exact categories/ranking remain proposed |
