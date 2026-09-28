@@ -271,7 +271,14 @@ Exact distribution of all 52 distinct pack outcomes under the approved slot odds
 
 The most common pack (R / C / C, 31.69%) is Jinxed with a score of 15.84. Scores near 100 are distinguished by the 1-in-N rarity rather than the rounded score.
 
-- [ ] Define the opening interaction and reveal sequence. Proposed: open wrapper → reveal a stack → show new lower-rarity cards while skipping already-owned lower-rarity cards according to the agreed duplicate rule → spotlight Rare-or-better pulls → show the top-three podium and result. Preserve spotlight moments for additional rare pulls, and do not reintroduce skipped duplicate reveals at the end.
+- [x] Define the opening interaction and reveal sequence. Self-paced like tarot: nothing advances automatically, and every gesture has a click/tap and keyboard equivalent.
+  1. **Before any animation:** generate and save all 12 cards, snapshot ownership, and add the cards to the collection once.
+  2. **Sealed pack:** drag across the top edge to tear it open. Click, tap, or Enter also opens it.
+  3. **Stack:** the cards come out as a face-down stack. Tap, click, or press Enter/Space to flip each card in pack order: 6 Commons → 3 Uncommons → 2 wildcards → the guaranteed Rare-or-better last. Wildcards are not sorted by rarity, so a wildcard can surprise mid-pack, even before the guaranteed card. First-time cards get a **New** badge. Already-owned cards below Rare are skipped and counted in a small tally (e.g. “4 already collected”).
+  4. **Rare pulls:** whenever the next card is Rare-or-better, including a wildcard, it rises face-down out of the stack with a glow that grows with its rarity, then flips. Every Rare-or-better card gets its own moment. A **Reveal the rest** option speeds through the Commons and Uncommons but still stops for every rare moment.
+  5. **Podium:** the three best cards move onto the podium. An already-owned Uncommon that qualifies appears with an **Owned** tag, without replaying its reveal.
+  6. **Result:** show the luck label and score, then return to the board. Jinxed wording stays light and playful.
+  - **Reduced motion:** the same order and steps, with quick fades instead of tearing, rising, and flipping.
 - [ ] Build the reveal using placeholder cards; retain an accessible reduced-motion path. Pack contents should be fixed before reveals so animation timing does not change the outcome.
 - [x] Make pulled cards persistent collectibles visible in the site's collection section alongside gacha characters.
 - [ ] Define collection storage, duplicate counts, same-pack duplicate handling, and whether special variants exist. Defer artwork direction until the games are finished.
@@ -286,9 +293,9 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 - [ ] Decide whether to display only acquired items or also undiscovered slots, and how owned quantities and variants appear.
 - [ ] Decide browser-local versus account-backed storage and cross-device behavior. Browser-only tarot tracking does not determine collection storage.
 - [ ] Store stable item identifiers, item type, rarity, and ownership; define quantities and acquisition metadata after duplicate behavior is settled.
-- [ ] Ensure resuming a pack opening cannot award the same pack twice; preserve generated contents and apply ownership changes once.
-- [ ] Define exactly when ownership is checked for reveal skipping, including duplicates within a single pack.
-- [ ] Keep game odds and comparison scores independent of collection maturity: determine the top three and the score from all 12 actual pulls, including any skipped duplicate reveals. Decide how the podium represents an already-owned low-rarity card if it qualifies, without replaying its individual reveal.
+- [ ] Ensure resuming a pack opening cannot award the same pack twice; preserve generated contents and apply ownership changes once. Agreed behavior: cards are saved and awarded before the wrapper opens; resuming returns to the same card in the reveal.
+- [x] Check ownership for reveal skipping once, when the pack is generated. Within one pack, the first copy of a card below Rare is revealed (as New if unowned) and later copies are skipped.
+- [ ] Keep game odds and comparison scores independent of collection maturity: determine the top three and the score from all 12 actual pulls, including any skipped duplicate reveals. An already-owned low-rarity card that qualifies for the podium appears there with an Owned tag, without replaying its individual reveal.
 
 ## 3. Game-selection boards and personal daily board
 
@@ -366,6 +373,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Compare daily luck with other users after completing the day's games | Agreed; scoring and eligibility remain open |
 | Daily comparison includes both a personal percentile and a leaderboard | Agreed; detailed presentation and ranking rules remain open |
 | 12-card packs with trading-card-style rarities and pack-opening/rare-card pull-up animations | Agreed |
+| Pack opening: tear to open, self-paced flips in pack order (wildcards unsorted, guaranteed card last), rarity-scaled glow on every rare pull, podium, then result | Agreed |
 | Pack slots: 6 Common, 3 Uncommon, 2 any-rarity wildcards, 1 Rare-or-better | Agreed |
 | Card rarities: Common, Uncommon, Rare, Super Rare, Ultra Rare, Secret Rare | Agreed |
 | Independent wildcard odds: 65% / 25% / 7% / 2% / 0.9% / 0.1%; guaranteed-slot odds: 75% Rare / 20% Super / 4.5% Ultra / 0.5% Secret | Agreed |
