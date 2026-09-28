@@ -105,8 +105,6 @@ export function toView(game: GameId, o: Outcome): GameView {
         digits,
         guesses,
         revealed,
-        // Worked out only from what the player has already been shown.
-        range: luckyNumber.possibleRange(digits, guesses, revealed),
         solved: state.guesses.includes(state.secret),
       };
     }

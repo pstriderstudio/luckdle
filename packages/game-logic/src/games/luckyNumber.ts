@@ -75,9 +75,8 @@ export interface GuessHint {
 }
 
 /**
- * Whether a number is still possible given only what the player has been
- * shown: the digit count, higher/lower hints, and revealed digits. This is
- * exactly the information the reference player uses.
+ * Whether a number is still possible given the digit count, higher/lower
+ * hints, and revealed digits: the information the reference player uses.
  */
 export function isPossible(n: number, digits: number, hints: readonly GuessHint[], revealed: readonly (string | null)[]): boolean {
   if (digitCount(n) !== digits) return false;
@@ -87,23 +86,6 @@ export function isPossible(n: number, digits: number, hints: readonly GuessHint[
   const ns = String(n);
   for (let i = 0; i < revealed.length; i++) if (revealed[i] !== null && ns[i] !== revealed[i]) return false;
   return true;
-}
-
-/** The smallest and largest numbers still possible (shown to the player while guessing). */
-export function possibleRange(
-  digits: number,
-  hints: readonly GuessHint[],
-  revealed: readonly (string | null)[],
-): { min: number; max: number } {
-  const { min: lo, max: hi } = digitRange(digits);
-  let min = -1;
-  let max = -1;
-  for (let n = lo; n <= hi; n++) {
-    if (!isPossible(n, digits, hints, revealed)) continue;
-    if (min === -1) min = n;
-    max = n;
-  }
-  return { min, max };
 }
 
 /** Guesses the reference player needs for a secret. */

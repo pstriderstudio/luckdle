@@ -48,16 +48,8 @@ export function LuckyNumberGame({ session, start, act, finish }: GameProps<'luck
         ))}
       </div>
       {!view.solved && (
-        <p className="number-range" aria-live="polite">
-          {view.range.min === view.range.max ? (
-            <>
-              It must be <strong>{view.range.min}</strong>
-            </>
-          ) : (
-            <>
-              Somewhere from <strong>{view.range.min}</strong> to <strong>{view.range.max}</strong>
-            </>
-          )}
+        <p className="number-range">
+          A {view.digits}-digit number from <strong>0</strong> to <strong>{10 ** view.digits - 1}</strong>
         </p>
       )}
       {last && !view.solved && (
