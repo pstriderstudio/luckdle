@@ -108,7 +108,7 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, Gem Breaker, and Cosmic Alignment (may be cut later). The remaining candidates are undesigned ideas.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, Gem Breaker, Cosmic Alignment (may be cut later), and Lucky Number. The remaining candidates are undesigned ideas.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -122,7 +122,7 @@ Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing
 | The Wishing Well | Make a wish, toss a coin, and receive a whimsical object themed to your wish. | Agreed; see the Wishing Well section. Object writing remains. |
 | Gem Breaker | Strike a geode three times to reveal a mineral with size and purity. | Agreed; see the Gem Breaker section. Mineral writing remains. |
 | Cosmic Alignment | Three rings settle on their own; luck is how tightly their Sun, Moon, and Star markers align. | Agreed; see the Cosmic Alignment section. May be cut from the game list later. |
-| Lucky Number | Generate a number and discover rare patterns such as repeated digits or palindromes. | Number range, pattern definitions, overlapping patterns, and rarity calculation. |
+| Lucky Number | Guess a secret number from 0–9999 with higher/lower hints and correct-position digit reveals; fewer guesses than average is luckier. | Agreed; see the Lucky Number section. |
 | Garden of Chance | Plant a mystery seed and reveal a bloom with possible mutations. | Plant pool, mutation odds, reveal timing, garden persistence, and garden capacity. |
 
 - [ ] Define each selected game's rules and outcome probabilities before implementing it.
@@ -417,6 +417,32 @@ Structured like Lucky Fishing (rarest exact find ranks highest) with a different
 - [x] Labels (exactly 20% each): Charmed ≤ 92.95°; Lucky 92.95°–131.45°; Fair Luck 131.45°–161.00°; Unlucky 161.00°–186.33°; Jinxed > 186.33°.
 - [x] Result: spread in degrees, a flavour name (Grand Alignment ≤ 5°, Aligned ≤ 30°, Converging ≤ 93°, Drifting ≤ 161°, Scattered above), “about 1 in N”, label, and score. No collectibles.
 
+### Lucky Number — agreed design (guessing game)
+
+Replaces the earlier random-number-pattern idea.
+
+- [x] Format: one secret number per day when this game is one of the user's five daily selections, uniformly random from 0–9999 and independent per player. The number of digits is shown (e.g. `_ _ _ _`); each guess must have that many digits.
+- [x] Feedback per guess: **higher**, **lower**, or **correct**. Any digit in the correct position is revealed and stays revealed. Guesses are unlimited, so the player always solves it.
+- [x] The number stays on the server and every guess is checked there; guesses are saved as they are made, and leaving mid-game resumes with the same number and guesses.
+- [x] This game involves some skill (a careful player uses higher/lower and revealed digits); luck still matters through early near-hits and digit reveals.
+- [x] Scoring against a **simulated average**, not live players: the reference distribution is a careful player who always guesses the middle of the remaining possible numbers, simulated over all 10,000 numbers (mean 6.8 guesses; a random-possible-guess player averages 8.6). Score = 100 × (share of reference games needing more guesses + ½ share needing the same). More than 13 guesses scores 0.
+
+| Guesses | Reference share | Score | Label |
+| --- | --- | --- | --- |
+| 1 | 0.04% | 99.98 | Charmed |
+| 2 | 0.38% | 99.77 | Charmed |
+| 3 | 2.50% | 98.33 | Charmed |
+| 4 | 7.86% | 93.15 | Charmed |
+| 5 | 14.01% | 82.21 | Charmed |
+| 6 | 21.39% | 64.52 | Lucky |
+| 7 | 20.17% | 43.73 | Fair Luck |
+| 8 | 13.70% | 26.80 | Unlucky |
+| 9–13 | 19.95% combined | 14.27 → 0.06 | Jinxed |
+| 14+ | — | 0 | Jinxed |
+
+- [x] Result: guesses taken versus the simulated average (e.g. “Solved in 5 guesses — the average is 6.8”), label, and score. No collectibles.
+- [ ] Re-run the reference simulation in code during implementation and keep it as test data.
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
@@ -545,6 +571,7 @@ Structured like Lucky Fishing (rarest exact find ranks highest) with a different
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | No separate launch set; games are designed one at a time | Agreed |
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
+| Lucky Number: 0–9999 guessing game with higher/lower and digit reveals; scored against a simulated careful player's guess counts | Agreed |
 | Cosmic Alignment: rings settle on their own; luck = tightness of Sun/Moon/Star alignment; continuous score, labels 20% each | Agreed; may be cut later |
 | Gem Breaker: three strikes to crack a geode; mineral × size × purity, rarest find ranks highest; Gems tab with personal bests | Agreed |
 | The Wishing Well: choose a wish theme, toss a coin, six object tiers, 60 collectible Curios | Agreed |
