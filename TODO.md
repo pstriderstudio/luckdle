@@ -108,7 +108,7 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, Gem Breaker, Cosmic Alignment (may be cut later), and Lucky Number. The remaining candidates are undesigned ideas.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, Three Chests, The Wishing Well, Gem Breaker, Cosmic Alignment (may be cut later), Lucky Number, and Garden of Chance. Every candidate in the table is now designed.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -123,7 +123,7 @@ Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing
 | Gem Breaker | Strike a geode three times to reveal a mineral with size and purity. | Agreed; see the Gem Breaker section. Mineral writing remains. |
 | Cosmic Alignment | Three rings settle on their own; luck is how tightly their Sun, Moon, and Star markers align. | Agreed; see the Cosmic Alignment section. May be cut from the game list later. |
 | Lucky Number | Guess a secret number from 0–9999 with higher/lower hints and correct-position digit reveals; fewer guesses than average is luckier. | Agreed; see the Lucky Number section. |
-| Garden of Chance | Plant a mystery seed and reveal a bloom with possible mutations. | Plant pool, mutation odds, reveal timing, garden persistence, and garden capacity. |
+| Garden of Chance | Plant a mystery seed, water it three times, and see what blooms, with stacking mutations. | Agreed; see the Garden of Chance section. Flower writing remains. |
 
 - [ ] Define each selected game's rules and outcome probabilities before implementing it.
 - [ ] Make ordinary and unlucky outcomes entertaining through artwork, names, and copy.
@@ -145,7 +145,7 @@ Five fair six-sided dice, one tap to roll them all, no rerolls, and combination-
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
 - [x] Use the shared luck labels with dice cut-offs : No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
-- [x] No rewards: dice is a pure luck test. Collectibles come only from the card pack, Daily Summon, Lucky Fishing, The Wishing Well, and Gem Breaker.
+- [x] No rewards: dice is a pure luck test. Collectibles come only from the card pack, Daily Summon, Lucky Fishing, The Wishing Well, Gem Breaker, and Garden of Chance.
 - [ ] Implement roll generation, persistence, and board completion state; verify category probabilities by enumeration in tests.
 
 #### Combination probabilities
@@ -443,10 +443,21 @@ Replaces the earlier random-number-pattern idea.
 - [x] Result: guesses taken versus the simulated average (e.g. “Solved in 5 guesses — the average is 6.8”), label, and score. No collectibles.
 - [ ] Re-run the reference simulation in code during implementation and keep it as test data.
 
+### Garden of Chance — agreed design
+
+- [x] Format: one seed per day when this game is one of the user's five daily selections. Tap to plant, then water three times: sprout → bud → bloom. The bud glows brighter for rarer blooms and each mutation appears with its own sparkle. Blooms the same day so the result counts in that day's comparison. Generated and saved before planting; reduced-motion path uses fades.
+- [x] Plant: Weed 15% (3 humorous weeds), Common 35%, Uncommon 25%, Rare 15%, Exotic 8%, Mythic 2%. Pool: 40 flowers (12 Common, 10 Uncommon, 8 Rare, 6 Exotic, 4 Mythic), equally likely within a tier.
+- [x] Mutations (flowers only), each rolled independently so they can stack: Variegated 20%, Twin Bloom 8%, Luminous 3%, Crystal Petals 1%. About 29% of flowers have at least one.
+- [x] Ranking: rank blooms by the probability of tier × exact mutation set (rarer first; equal probabilities tie). Weeds are always lowest.
+- [x] Labels (per-game cut-offs): Jinxed = Weed (15.0%); Unlucky = plain Common (24.7%); Fair Luck = plain Uncommon (17.7%); Lucky = plain Rare, Variegated Common, plain Exotic (22.4%); Charmed = Variegated Uncommon or rarer (20.2%). Result shows the bloom, its mutations, “about 1 in N”, label, and score.
+- [x] Collection: a **Garden** tab drawn as a garden bed with one plot per species (43 including weeds); unfilled plots show bare soil. Each plot shows the player's best bloom of that species (the rarest mutation set grown), derived from saved results. No streak reward. Pace at one seed per day: full garden ~379 days typical, ~729 for the unluckiest 10%.
+- [x] Next-day blooming was considered and rejected so results stay within the daily comparison.
+- [ ] Write the 40 flowers and 3 weeds (names, short descriptions) and mutation visuals.
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
-- [x] Organize the collection into separate Cards, Characters, Fish, Curios, and Gems tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
+- [x] Organize the collection into separate Cards, Characters, Fish, Curios, Gems, and Garden tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
 - [x] Show undiscovered items as numbered silhouettes with their rarity, plus progress such as “37 / 120 collected”. Show no quantities (ownership only) and no variants at launch.
 - [x] Store collections on a server under an anonymous player ID created on first visit and kept in the browser, with no account needed to play. Optional sign-in later links the anonymous player to an account for cross-device sync and a leaderboard name. Without signing in, clearing browser data loses the collection. The tarot introduction stays browser-only as agreed.
 - [ ] Derive ownership from the player's saved official results (packs, later summons) rather than a separately awarded list, so an item is owned if any saved result contains it. Store stable item identifiers, item type, and rarity, plus the game day each item was first obtained. No copy counts.
@@ -571,6 +582,7 @@ Replaces the earlier random-number-pattern idea.
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | No separate launch set; games are designed one at a time | Agreed |
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
+| Garden of Chance: plant and water a seed; tier × stacking mutations, rarest bloom ranks highest; Garden tab showing best bloom per species | Agreed |
 | Lucky Number: 0–9999 guessing game with higher/lower and digit reveals; scored against a simulated careful player's guess counts | Agreed |
 | Cosmic Alignment: rings settle on their own; luck = tightness of Sun/Moon/Star alignment; continuous score, labels 20% each | Agreed; may be cut later |
 | Gem Breaker: three strikes to crack a geode; mineral × size × purity, rarest find ranks highest; Gems tab with personal bests | Agreed |
