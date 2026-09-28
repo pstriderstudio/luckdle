@@ -106,9 +106,9 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 ## 2. Game ideas backlog
 
-The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section; the complete launch selection is not yet settled.
+The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Current discussion: work through the games individually. The dice game's core interaction and luck approach are agreed; exact scoring values and other open details remain tracked below. Next candidate: Mystery Card Pack.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, and Lucky Fishing. The remaining candidates are undesigned ideas.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -118,15 +118,13 @@ Current discussion: work through the games individually. The dice game's core in
 | Coin Streak | Flip until tails ends the run; measure the number of consecutive heads. | Manual versus automatic flips, outcome probabilities, scoring, and long-streak handling. |
 | Plinko / Falling Star | Watch a dropped ball or star bounce through pegs into a reward slot. | Board layout, drop-point choice, outcome distribution, and physics versus a preselected outcome. |
 | Three Chests | Choose a chest, then reveal its contents and those of the other two. | Reward pool, how contents are assigned, and reveal order. |
-| Lucky Fishing | Make one cast and reveal a creature with a species, size, and unusual trait. | Species pool, size and trait distributions, rare combinations, and collection records. |
+| Lucky Fishing | Make one cast and reveal a catch with a species, size, and unusual trait. | Agreed; see the Lucky Fishing section. Species writing and art remain. |
 | The Wishing Well | Toss a coin into a well and receive a whimsical object. | Item pool, rarity, tone, reveal interaction, and whether objects persist. |
 | Gem Breaker | Crack a geode to reveal a mineral with size and purity attributes. | Mineral pool, attribute distributions, cracking interaction, and collection display. |
 | Cosmic Alignment | Reveal the alignment of three spinning celestial rings. | Random-stop interaction, alignment measurement, outcome tiers, and animation. |
 | Lucky Number | Generate a number and discover rare patterns such as repeated digits or palindromes. | Number range, pattern definitions, overlapping patterns, and rarity calculation. |
 | Garden of Chance | Plant a mystery seed and reveal a bloom with possible mutations. | Plant pool, mutation odds, reveal timing, garden persistence, and garden capacity. |
 
-- [ ] Select launch games after defining the tarot experience. Suggested starting set: tarot, dice, a card pack, and fishing; not yet approved.
-- [ ] Decide whether card packs and character summons offer enough distinct value to launch together.
 - [ ] Define each selected game's rules and outcome probabilities before implementing it.
 - [ ] Make ordinary and unlucky outcomes entertaining through artwork, names, and copy.
 
@@ -147,7 +145,7 @@ Five fair six-sided dice, one tap to roll them all, no rerolls, and combination-
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
 - [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
 - [x] Use the shared luck labels with dice cut-offs : No combination → Jinxed; One pair → Unlucky; Two pairs → Fair Luck; Three of a kind → Lucky; Full house → Charmed; Five-dice straight → Charmed; Four of a kind → Charmed; Five of a kind → Charmed. Frequencies: Jinxed 6.17% / Unlucky 46.30% / Fair Luck 23.15% / Lucky 15.43% / Charmed 8.95%.
-- [x] No rewards: dice is a pure luck test; cards and characters remain the only collectibles.
+- [x] No rewards: dice is a pure luck test; cards, characters, and fish remain the only collectibles.
 - [ ] Implement roll generation, persistence, and board completion state; verify category probabilities by enumeration in tests.
 
 #### Combination probabilities
@@ -314,10 +312,24 @@ A daily gacha-style 10-pull from an original fantasy cast, separate in feel from
 - [ ] Write the 60-character cast (names, titles, bios) and assign tiers.
 - [ ] Confirm the label cut-offs by exact search and build the full outcome/score table in code rather than in this document.
 
+### Lucky Fishing — agreed design
+
+One cast per day when this game is one of the user's five daily selections. Pure luck, no skill: the catch is generated and saved before any animation.
+
+- [x] Catch type per cast: Junk 15%, Common 45%, Uncommon 25%, Rare 11%, Legendary 3.5%, Mythic 0.5%. Pool: 37 fish (12 Common, 10 Uncommon, 8 Rare, 5 Legendary, 2 Mythic) plus 5 humorous junk items (e.g. old boot, tin can), each equally likely within its type.
+- [x] Size class (fish only): Small 45%, Medium 32%, Large 17%, Huge 5%, Colossal 1%. Bigger is always rarer. Each species has its own length range; the class picks a band and a real length is shown.
+- [x] Trait (fish only): Plain 88%, Marked 8% (e.g. Spotted), Strange 3% (e.g. Glowing), Wondrous 1% (e.g. Golden). Traits can appear on any fish.
+- [x] Ranking: like dice, the rarer the exact catch, the luckier. Rank fish by the probability of their type × size class × trait (rarer first); equal probabilities tie. Junk is always lowest. Example: a Golden Colossal Common (about 1 in 25,000) outranks a plain small Mythic (about 1 in 505).
+- [x] Score and labels: shared 0–100 luck score; per-game cut-offs: Jinxed = Junk (15.0%); Unlucky = small plain Common (17.8%); Fair Luck = medium plain Common through small plain Uncommon (22.6%); Lucky = medium plain Uncommon through large plain Uncommon (21.9%); Charmed = medium plain Rare or rarer, including any fish with a trait (22.7%). Result shows the catch, its “about 1 in N”, the label, and the score.
+- [x] Cast interaction, self-paced with click/tap/keyboard equivalents and a reduced-motion path of fades: pull back and release to cast → the bobber waits briefly → “Bite!” → tap to reel in (no timing skill; the catch cannot escape) → the catch rises with a glow that grows with its type → name, length, and trait, with a **New** badge for a new species → label, score, and 1-in-N.
+- [x] Collection: a Fish tab listing species caught (junk included) with silhouettes for missing ones. Unlike cards and characters, each species also shows personal bests: longest catch and rarest trait caught. Personal bests are derived from saved catches. No streak reward.
+- [x] Pace: with one cast per day, a typical player completes the log in about 550 days (90%: about 1,190); the two Mythics are the long chase.
+- [ ] Write the 37 species (names, length ranges, short descriptions), 5 junk items, and trait names for each trait level.
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
-- [x] Organize the collection into separate Cards and Characters tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
+- [x] Organize the collection into separate Cards, Characters, and Fish tabs, with a rarity filter and a **New** marker on each newly collected item until it has been viewed.
 - [x] Show undiscovered items as numbered silhouettes with their rarity, plus progress such as “37 / 120 collected”. Show no quantities (ownership only) and no variants at launch.
 - [x] Store collections on a server under an anonymous player ID created on first visit and kept in the browser, with no account needed to play. Optional sign-in later links the anonymous player to an account for cross-device sync and a leaderboard name. Without signing in, clearing browser data loses the collection. The tarot introduction stays browser-only as agreed.
 - [ ] Derive ownership from the player's saved official results (packs, later summons) rather than a separately awarded list, so an item is owned if any saved result contains it. Store stable item identifiers, item type, and rarity, plus the game day each item was first obtained. No copy counts.
@@ -440,4 +452,5 @@ A daily gacha-style 10-pull from an original fantasy cast, separate in feel from
 | Broader welcome, text only, self-paced | Agreed |
 | Tarot outlook uses the shared labels Jinxed / Unlucky / Fair Luck / Lucky / Charmed | Agreed; replaces Bad luck / Minor bad luck / Neutral / Minor good luck / Good luck |
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
-| Launch with tarot, dice, card packs, and fishing | Proposed |
+| No separate launch set; games are designed one at a time | Agreed |
+| Lucky Fishing: one cast/day; type, size class, and trait; rarest exact catch ranks highest, junk lowest; Fish tab with personal bests | Agreed |
