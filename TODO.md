@@ -108,7 +108,7 @@ Fully authored content, theme-based connections, sequential reveals, and positio
 
 The table tracks game candidates and their evolving rules. Approved details are recorded in each game's section. There is no separate launch set: games are designed one at a time.
 
-Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, and Falling Star. The remaining candidates are undesigned ideas.
+Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing, Coin Streak, Falling Star, and Three Chests. The remaining candidates are undesigned ideas.
 
 | Candidate | Proposed player experience | Details to resolve before implementation |
 | --- | --- | --- |
@@ -117,7 +117,7 @@ Designed so far: Dice of Destiny, Mystery Card Pack, Daily Summon, Lucky Fishing
 | Daily Summon | A gacha-style 10-pull of characters from an original fantasy cast. | Agreed; see the Daily Summon section. Character writing and art remain. |
 | Coin Streak | Call heads or tails before each flip and keep flipping until the second wrong call. | Agreed; see the Coin Streak section. |
 | Falling Star | Make a wish: a star falls from the sky, bounces through pegs, and lands in a funnel of slots where the narrow centre is rarest. | Agreed; see the Falling Star section. |
-| Three Chests | Choose a chest, then reveal its contents and those of the other two. | Reward pool, how contents are assigned, and reveal order. |
+| Three Chests | Pick one of three chests, then see what the other two held. | Agreed; see the Three Chests section. |
 | Lucky Fishing | Make one cast and reveal a catch with a species, size, and unusual trait. | Agreed; see the Lucky Fishing section. Species writing and art remain. |
 | The Wishing Well | Toss a coin into a well and receive a whimsical object. | Item pool, rarity, tone, reveal interaction, and whether objects persist. |
 | Gem Breaker | Crack a geode to reveal a mineral with size and purity attributes. | Mineral pool, attribute distributions, cracking interaction, and collection display. |
@@ -361,6 +361,33 @@ Renamed from Plinko / Falling Star. Reimagined so the centre is the prize rather
 - [x] Result: the slot, its “about 1 in N”, label, and score. No collectibles or rewards; reduced-motion path uses fades.
 - [x] A classic centre-heavy Galton board was rejected: its middle slots would make about 45% of single drops Jinxed.
 
+### Three Chests — agreed design
+
+- [x] Format: one pick per day when this game is one of the user's five daily selections. Three closed chests; the player picks one (tap/click or keys 1–3). Their chest opens first with a glow that grows with its tier, then the other two open one at a time.
+- [x] Real but fair choice: all three chests are filled independently and saved before the pick, so every chest has the same odds. Contents are not sent to the browser until the pick is made, so they cannot be inspected early. Leaving before picking returns the same three closed chests; the game locks when a chest is picked.
+- [x] Treasure tiers, drawn independently per chest: Cobwebs 25%, Copper 30%, Silver 22%, Gold 14%, Jewels 7%, Relic 2%. No collectibles.
+- [x] Ranking: your treasure tier first, then how many of the other two chests it strictly beats (0–2). Picking the best chest therefore counts toward luck.
+- [x] Labels (per-game cut-offs): Jinxed 25.0% / Unlucky 16.9% / Fair Luck 17.6% / Lucky 18.3% / Charmed 22.3%. Result shows the treasure, chests beaten, “about 1 in N”, label, and score; reduced-motion path uses fades.
+
+| Your treasure | Other chests beaten | Probability | About 1 in | Score | Label |
+| --- | --- | --- | --- | --- | --- |
+| Relic | 2 | 1.921% | 52 | 99.04 | Charmed |
+| Relic | 1 | 0.078% | 1,276 | 98.04 | Charmed |
+| Relic | 0 | 0.001% | 125,000 | 98.00 | Charmed |
+| Jewels | 2 | 5.797% | 17 | 95.10 | Charmed |
+| Jewels | 1 | 1.147% | 87 | 91.63 | Charmed |
+| Jewels | 0 | 0.057% | 1,764 | 91.03 | Charmed |
+| Gold | 2 | 8.301% | 12 | 86.85 | Charmed |
+| Gold | 1 | 4.959% | 20 | 80.22 | Charmed |
+| Gold | 0 | 0.741% | 135 | 77.37 | Lucky |
+| Silver | 2 | 6.655% | 15 | 73.67 | Lucky |
+| Silver | 1 | 10.890% | 9 | 64.90 | Lucky |
+| Silver | 0 | 4.455% | 22 | 57.23 | Fair Luck |
+| Copper | 2 | 1.875% | 53 | 54.06 | Fair Luck |
+| Copper | 1 | 11.250% | 9 | 47.50 | Fair Luck |
+| Copper | 0 | 16.875% | 6 | 33.44 | Unlucky |
+| Cobwebs | 0 | 25.000% | 4 | 12.50 | Jinxed |
+
 ### Collection section — agreed feature
 
 - [x] Add a collection section where users can see cards and gacha characters they have pulled.
@@ -489,5 +516,6 @@ Renamed from Plinko / Falling Star. Reimagined so the centre is the prize rather
 | Tarot is separate from game odds, rewards, scores, and reports | Agreed |
 | No separate launch set; games are designed one at a time | Agreed |
 | Coin Streak: call every flip, run ends on the second miss, luck = correct calls, run length fixed before the first flip | Agreed |
+| Three Chests: fair pick of three independently filled chests; luck = your treasure, then chests beaten | Agreed |
 | Falling Star: one wished star per day, funnel board with slot widths matching odds, rare narrow centre (Supernova 3%) | Agreed |
 | Lucky Fishing: one cast/day; type, size class, and trait; rarest exact catch ranks highest, junk lowest; Fish tab with personal bests | Agreed |
