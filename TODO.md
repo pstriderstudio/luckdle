@@ -10,6 +10,7 @@ This document tracks the product ideas, agreed decisions, and implementation wor
 - Free users can choose five games per day to make their own personal board. Per-game attempt limits and board-editing rules are separate decisions that remain open.
 - Game boards do not display results. Decide how results are presented separately; do not assume score or outcome previews on game panels.
 - Provide a collection section showing the cards and gacha characters the user has pulled.
+- Score every game on one shared 0–100 luck scale: the percentage of that game's possible results ranked below yours, plus half of those that tie with it. Equal results get equal scores; no hidden tie-breakers.
 - Give dice outcomes both a plain-language luck label and a numerical luck score. After users finish their games for the day, compare their daily luck with other users. The scoring scale, aggregation, and comparison presentation remain to be designed.
 - Greet first-time visitors on the home page with a tarot fortune before they enter the other games.
 - Tarot is a skippable, one-time introduction for first-time visitors. It cannot be revisited or requested again after completion or skipping.
@@ -143,7 +144,8 @@ Five dice, one tap to roll them all, no rerolls, and combination-based luck are 
 - [x] Decide interaction: one click/tap rolls all five dice once.
 - [ ] Decide attempts. Proposed: one official roll when this game is one of the user's five daily selections, with the result saved and no reroll.
 - [x] Give the dice result both a plain-language luck label and a numerical luck score, anchored by the actual combination to make the outcome understandable.
-- [ ] Define luck-label thresholds and the numerical scoring scale. Proposed: a common 0–100 scale across games; not yet approved.
+- [x] Use the shared 0–100 luck score (see Agreed direction). Scores follow the approved luck ranking, so No combination stays lowest.
+- [ ] Define the plain-language luck-label thresholds.
 - [ ] Decide any rewards separately; collectible rewards are not currently agreed.
 - [ ] Once rules are approved, enumerate outcomes to verify category probabilities and implement roll generation, persistence, and board completion state.
 
@@ -164,9 +166,11 @@ Enumerated all 7,776 ordered rolls of five independent fair six-sided dice. Thes
 
 No combination is deliberately lowest luck even though that category is less common than a pair. Rarity ranks recognized successful combinations, not every possible result category. This preserves the user's intended low luck for no/minimal combinations. Five-dice-only straights are approved; four-dice straights are excluded.
 
+Luck scores under the shared 0–100 method, if the proposed ranking above is approved: No combination 3.1 · One pair 29.3 · Two pairs 64.0 · Three of a kind 83.3 · Full house 93.0 · Five-dice straight 96.5 · Four of a kind 99.0 · Five of a kind 99.96.
+
 ### Mystery Card Pack — next game for discussion
 
-Agreed direction: a 12-card pack inspired by Yu-Gi-Oh!/Magic-style boosters with multiple rarities, a pack-opening animation, and a rare card pulled upward and revealed. Each pack contains 6 Common slots, 3 Uncommon slots, 2 wildcard slots of any rarity, and 1 guaranteed Rare-or-better slot, with approved independent slot odds below. A podium spotlights the three rarest cards from the current pack and those three determine its luck result. The scoring formula remains open; artwork is still deferred.
+Agreed direction: a 12-card pack inspired by Yu-Gi-Oh!/Magic-style boosters with multiple rarities, a pack-opening animation, and a rare card pulled upward and revealed. Each pack contains 6 Common slots, 3 Uncommon slots, 2 wildcard slots of any rarity, and 1 guaranteed Rare-or-better slot, with approved independent slot odds below. A podium spotlights the three rarest cards from the current pack and those three determine its luck result. Podium ordering and the luck score are agreed (below); label thresholds remain open. Artwork is still deferred.
 
 - [x] Replace the five-card proposal with a 12-card trading-card-style booster.
 - [x] Include multiple rarity tiers, a pack-opening animation, and a rare-card pull-up/reveal animation.
@@ -174,7 +178,7 @@ Agreed direction: a 12-card pack inspired by Yu-Gi-Oh!/Magic-style boosters with
 - [x] Guarantee one Rare-or-better card in every pack. Additional Rare-or-better cards are possible through chance, not guaranteed; the other podium places may be lower rarity.
 - [x] Define pack slots: 6 Common + 3 Uncommon + 2 wildcards that can yield any rarity + 1 guaranteed Rare-or-better. This is Luckdle's agreed format, not the distribution of a specific real-world product.
 - [x] Show a podium of the three rarest cards pulled from the current pack and base the pack's luck result on those three. This is a result presentation outside the game-selection boards.
-- [ ] Define how the top three combine into the numerical luck score and label, including equal-rarity ties, duplicate copies, and packs containing fewer than three Rare-or-better cards.
+- [x] Define how the top three combine into the numerical luck score: rank by rarity only, so duplicate copies count like any other card of that rarity, equal rarity triplets tie, and when fewer than three cards are Rare-or-better the fixed Uncommons fill the podium. Commons can never reach the podium.
 - [x] Skip duplicate cards below Rare in the reveal experience, so as the collection fills the reveal increasingly focuses on Rare-or-better pulls. Rare-or-better duplicates are not skipped by this rule.
 - [x] Count already-owned cards below Rare among the 12, keep the actual pack contents, and skip only their individual reveal. Do not replace or reroll them; ownership affects presentation, not pack contents or odds.
 - [x] Finalize the rarity ladder: Common → Uncommon → Rare → Super Rare → Ultra Rare → Secret Rare.
@@ -192,8 +196,52 @@ Agreed direction: a 12-card pack inspired by Yu-Gi-Oh!/Magic-style boosters with
 
 Under the approved odds, each wildcard has a 10% chance of Rare-or-better, so a pack contains exactly one/two/three Rare-or-better cards with probabilities 81%/18%/1%. At least one Secret Rare appears in 1 − (0.999² × 0.995) = 0.6989005% of packs (about 1 in 143). These are long-run probabilities, not guaranteed pull intervals.
 
-- [ ] Choose podium scoring priority. Recommended proposal: compare the highest rarity first, then the second-highest, then the third-highest; one Secret Rare outranks a pack with no Secret Rare, with supporting pulls distinguishing packs that share the same highest tier. Alternative: additive rarity points allow several lower-tier rares to outweigh a single higher-tier pull.
-- [ ] After choosing the ordering, derive the numerical luck score from the complete distribution of podium outcomes under the approved slot odds, and define label thresholds. Equal rarity triplets should tie unless a separate variant rule is approved; do not add arbitrary hidden tie-breakers.
+- [x] Choose podium scoring priority: compare the highest rarity first, then the second-highest, then the third-highest. One Secret Rare outranks any pack without one; supporting pulls distinguish packs that share the same highest tier. Additive rarity points were rejected.
+- [x] Derive the numerical luck score from the complete distribution of podium outcomes under the approved slot odds (table below). Equal rarity triplets tie; no hidden tie-breakers.
+- [ ] Define the plain-language luck-label thresholds for packs.
+
+#### Podium outcomes and luck scores
+
+Exact distribution of all 34 podium outcomes under the approved slot odds, best first. Score = the shared 0–100 luck score. Abbreviations: U Uncommon, R Rare, SR Super Rare, UR Ultra Rare, ScR Secret Rare.
+
+| Podium | Probability | About 1 in | Score |
+| --- | --- | --- | --- |
+| ScR / ScR / ScR | 0.0000005% | 200,000,000 | 100.00 |
+| ScR / ScR / UR | 0.0000135% | 7,407,407 | 100.00 |
+| ScR / ScR / SR | 0.00004% | 2,500,000 | 100.00 |
+| ScR / ScR / R | 0.000145% | 689,655 | 100.00 |
+| ScR / ScR / U | 0.0009% | 111,111 | 100.00 |
+| ScR / UR / UR | 0.0001215% | 823,045 | 100.00 |
+| ScR / UR / SR | 0.00072% | 138,889 | 100.00 |
+| ScR / UR / R | 0.00261% | 38,314 | 100.00 |
+| ScR / UR / U | 0.0162% | 6,173 | 99.99 |
+| ScR / SR / SR | 0.001% | 100,000 | 99.98 |
+| ScR / SR / R | 0.0072% | 13,889 | 99.97 |
+| ScR / SR / U | 0.054% | 1,852 | 99.94 |
+| ScR / R / R | 0.01295% | 7,722 | 99.91 |
+| ScR / R / U | 0.198% | 505 | 99.81 |
+| ScR / U / U | 0.405% | 247 | 99.50 |
+| UR / UR / UR | 0.0003645% | 274,348 | 99.30 |
+| UR / UR / SR | 0.00324% | 30,864 | 99.30 |
+| UR / UR / R | 0.011745% | 8,514 | 99.29 |
+| UR / UR / U | 0.0729% | 1,372 | 99.25 |
+| UR / SR / SR | 0.009% | 11,111 | 99.21 |
+| UR / SR / R | 0.0648% | 1,543 | 99.17 |
+| UR / SR / U | 0.486% | 206 | 98.90 |
+| UR / R / R | 0.11655% | 858 | 98.59 |
+| UR / R / U | 1.782% | 56 | 97.65 |
+| UR / U / U | 3.645% | 27 | 94.93 |
+| SR / SR / SR | 0.008% | 12,500 | 93.11 |
+| SR / SR / R | 0.086% | 1,163 | 93.06 |
+| SR / SR / U | 0.72% | 139 | 92.66 |
+| SR / R / R | 0.308% | 325 | 92.14 |
+| SR / R / U | 5.22% | 19 | 89.38 |
+| SR / U / U | 16.2% | 6 | 78.67 |
+| R / R / R | 0.3675% | 272 | 70.38 |
+| R / R / U | 9.45% | 11 | 65.47 |
+| R / U / U | 60.75% | 2 | 30.38 |
+
+The most common pack (R / U / U, 60.75%) scores about 30: a typical result sits below the middle because most results are ordinary. Scores near 100 are distinguished by the 1-in-N rarity rather than the rounded score.
 
 - [ ] Define the opening interaction and reveal sequence. Proposed: open wrapper → reveal a stack → show new lower-rarity cards while skipping already-owned lower-rarity cards according to the agreed duplicate rule → spotlight Rare-or-better pulls → show the top-three podium and result. Preserve spotlight moments for additional rare pulls, and do not reintroduce skipped duplicate reveals at the end.
 - [ ] Build the reveal using placeholder cards; retain an accessible reduced-motion path. Pack contents should be fixed before reveals so animation timing does not change the outcome.
@@ -255,6 +303,7 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 - [ ] Decide whether to show result rarity, such as “1 in 250,” and calculate it from the actual outcome distribution.
 - [ ] Explore a shared daily theme across games.
 - [ ] Design a compact share card for daily game results, excluding the one-time tarot reading.
+- [x] Put every game on the shared 0–100 luck score, so each game's score measures the same thing and no game choice raises expected standing.
 - [ ] Define a daily luck score from the completed game results and how unlike games are compared. A common scale alone does not guarantee comparable daily distributions: account for each selected game's odds, outcome ordering, ties, and differing score distributions before choosing an aggregation method.
 - [ ] Define comparison eligibility, daily cohort/reset boundary, tie handling, and whether standings are live or final. Comparisons must use actual eligible user results, distinct from theoretical outcome rarity; provide a clear state when there are too few results.
 - [x] Show both a personal percentile and a leaderboard after the user completes their games for the day. Exact layout, leaderboard identity/display names, and ranking rules remain to be defined.
@@ -295,7 +344,9 @@ Reference examples: Konami lists [Supreme Darkness](https://www.yugioh-card.com/
 | Each card pack guarantees one Rare-or-better card; additional rare pulls are chance-based | Agreed |
 | Collection section for pulled cards and gacha characters | Agreed; persistence and display details remain open |
 | Already-owned cards below Rare count among the 12 but skip their individual reveal, with no replacement | Agreed; pack odds remain unchanged |
-| Top-three rarest cards from the current pack form a podium and determine pack luck | Agreed; score formula and tie handling remain open |
+| Top-three rarest cards from the current pack form a podium and determine pack luck | Agreed |
+| Podium ranked by highest rarity first, then second, then third; equal rarity triplets tie | Agreed |
+| Shared 0–100 luck score for every game: % of results ranked below yours, plus half of ties | Agreed; label thresholds remain open |
 | Supplied game-menu image as a board-layout reference | Recorded; art direction remains deferred |
 | First-time home-page tarot greeting with five fortune levels | Agreed |
 | Tarot should feel like a reading rather than a simple card pick | Agreed |
