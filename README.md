@@ -26,6 +26,12 @@ supabase start
 supabase functions serve
 ```
 
+## Playtest mode
+
+The web app currently runs in **playtest mode**: `LocalGameService` (`apps/web/src/service/localService.ts`) generates outcomes in the browser with the shared game logic and keeps everything in `localStorage`. It is not cheat-proof; it exists so the games, boards, collection, report, and tarot introduction can be played and judged. The UI talks only to the `GameService` interface, so a Supabase-backed service can replace it in `main.tsx` without UI changes.
+
+The pink playtest bar at the bottom offers **Next day** (moves this browser to the next game day), **Reset today**, **Reset all**, and **Replay tarot**. All names, descriptions, art, and tarot readings are placeholders.
+
 ## Rules of the road
 
 - Official outcomes are generated only in Edge Functions with `secureRng()` and saved before any reveal. The web app uses `@luckdle/game-logic` for display only.
